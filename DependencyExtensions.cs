@@ -40,7 +40,10 @@ namespace Alquimiaware
             if (child == null)
             {
                 child = new GameObject(name).transform;
-                child.SetParent(go.transform);
+                child.parent = go.transform;
+                child.localPosition = Vector3.zero;
+                child.localRotation = Quaternion.identity;
+                child.localScale = Vector3.one;
             }
 
             return child;
@@ -71,7 +74,7 @@ namespace Alquimiaware
             if (dependency == null && scope >= Scope.Subtree)
                 dependency = component.GetComponentInChildren<T>();
             if (dependency == null && scope >= Scope.Ancestor)
-                dependency = component.GetComponentInParent<T>();
+                dependency = component._GetComponentInParent<T>();
             if (dependency == null && scope >= Scope.Scene)
                 dependency = Component.FindObjectOfType<T>();
             if (dependency == null)
@@ -80,13 +83,53 @@ namespace Alquimiaware
             return dependency;
         }
 
+        private static T _GetComponentInParent<T>(this Component component) 
+            where T : Component
+        {
+#if UNITY_4_0 || UNITY_4_0_1 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3
+            return component.gameObject._GetComponentInParent<T>();
+#else
+            return component.GetComponentInParent<T>();
+#endif
+
+            
+        }
+
+        private static T _GetComponentInParent<T>(this GameObject go)
+            where T : Component
+        {
+            if (go == null) throw new ArgumentNullException("go");
+
+            T t = go.GetComponent<T>();
+            if (t != null)
+                return t;
+
+            if (go.transform.parent == null)
+                return null;
+            else
+                return go.transform.parent.gameObject._GetComponentInParent<T>();
+        }
+
+        /// <summary>
+        /// Gets all the components in children exactly at an specific depth
+        /// </summary>
+        public static T[] GetComponentsInChildrenAtDepth<T>(this Component component, int captureDepth)
+            where T : Component
+        {
+            if (component == null) throw new ArgumentNullException("component");
+            if (captureDepth < 1) throw new ArgumentOutOfRangeException("captureDepth", "must be greater than 0");
+
+            return component.gameObject.GetComponentsInChildrenAtDepth<T>(captureDepth);
+        }
+
         /// <summary>
         /// Gets all the components in children exactly at an specific depth
         /// </summary>
         public static T[] GetComponentsInChildrenAtDepth<T>(this GameObject go, int captureDepth)
             where T : Component
         {
-            if (captureDepth < 1) throw new ArgumentOutOfRangeException("captureDepht", "must be greater than 0");
+            if (go == null) throw new ArgumentNullException("go");
+            if (captureDepth < 1) throw new ArgumentOutOfRangeException("captureDepth", "must be greater than 0");
 
             return go.GetComponentsInChildren<T>()
                      .Where(c => c.gameObject != go
@@ -95,12 +138,25 @@ namespace Alquimiaware
         }
 
         /// <summary>
-        /// Gets all the children up to an specific depth
+        /// Gets all the children up to a specific depth
+        /// </summary>
+        public static T[] GetComponentsInChildrenUpToDepth<T>(this Component component, int captureDepth)
+            where T : Component
+        {
+            if (component == null) throw new ArgumentNullException("component");
+            if (captureDepth < 1) throw new ArgumentOutOfRangeException("captureDepth", "must be greater than 0");
+
+            return component.gameObject.GetComponentsInChildrenUpToDepth<T>(captureDepth);
+        }
+
+        /// <summary>
+        /// Gets all the children up to a specific depth
         /// </summary>
         public static T[] GetComponentsInChildrenUpToDepth<T>(this GameObject go, int captureDepth)
             where T : Component
         {
-            if (captureDepth < 1) throw new ArgumentOutOfRangeException("captureDepht", "must be greater than 0");
+            if (go == null) throw new ArgumentNullException("go");
+            if (captureDepth < 1) throw new ArgumentOutOfRangeException("captureDepth", "must be greater than 0");
 
             return go.GetComponentsInChildren<T>()
                      .Where(c => c.gameObject != go
