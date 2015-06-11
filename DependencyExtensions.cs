@@ -128,6 +128,7 @@ namespace Alquimiaware
         public static T[] GetComponentsInChildrenAtDepth<T>(this GameObject go, int captureDepth)
             where T : Component
         {
+            if (go == null) throw new ArgumentNullException("go");
             if (captureDepth < 1) throw new ArgumentOutOfRangeException("captureDepth", "must be greater than 0");
 
             return go.GetComponentsInChildren<T>()
@@ -154,6 +155,7 @@ namespace Alquimiaware
         public static T[] GetComponentsInChildrenUpToDepth<T>(this GameObject go, int captureDepth)
             where T : Component
         {
+            if (go == null) throw new ArgumentNullException("go");
             if (captureDepth < 1) throw new ArgumentOutOfRangeException("captureDepth", "must be greater than 0");
 
             return go.GetComponentsInChildren<T>()
