@@ -74,13 +74,40 @@ namespace Alquimiaware
             if (dependency == null && scope >= Scope.Subtree)
                 dependency = component.GetComponentInChildren<T>();
             if (dependency == null && scope >= Scope.Ancestor)
-                dependency = component.GetComponentInParent<T>();
+                dependency = component._GetComponentInParent<T>();
             if (dependency == null && scope >= Scope.Scene)
                 dependency = Component.FindObjectOfType<T>();
             if (dependency == null)
                 dependency = defaultValue;
 
             return dependency;
+        }
+
+        private static T _GetComponentInParent<T>(this Component component) 
+            where T : Component
+        {
+#if UNITY_4_0 || UNITY_4_0_1 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3
+            return component.gameObject._GetComponentInParent<T>();
+#else
+            return component.GetComponentInParent<T>();
+#endif
+
+            
+        }
+
+        private static T _GetComponentInParent<T>(this GameObject go)
+            where T : Component
+        {
+            if (go == null) throw new ArgumentNullException("go");
+
+            T t = go.GetComponent<T>();
+            if (t != null)
+                return t;
+
+            if (go.transform.parent == null)
+                return null;
+            else
+                return go.transform.parent.gameObject._GetComponentInParent<T>();
         }
 
         /// <summary>
