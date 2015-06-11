@@ -113,6 +113,18 @@ namespace Alquimiaware
         /// <summary>
         /// Gets all the components in children exactly at an specific depth
         /// </summary>
+        public static T[] GetComponentsInChildrenAtDepth<T>(this Component component, int captureDepth)
+            where T : Component
+        {
+            if (component == null) throw new ArgumentNullException("component");
+            if (captureDepth < 1) throw new ArgumentOutOfRangeException("captureDepth", "must be greater than 0");
+
+            return component.gameObject.GetComponentsInChildrenAtDepth<T>(captureDepth);
+        }
+
+        /// <summary>
+        /// Gets all the components in children exactly at an specific depth
+        /// </summary>
         public static T[] GetComponentsInChildrenAtDepth<T>(this GameObject go, int captureDepth)
             where T : Component
         {
@@ -122,6 +134,18 @@ namespace Alquimiaware
                      .Where(c => c.gameObject != go
                          && go.transform.GetRelativeDepth(c.transform) == captureDepth)
                      .ToArray();
+        }
+
+        /// <summary>
+        /// Gets all the children up to a specific depth
+        /// </summary>
+        public static T[] GetComponentsInChildrenUpToDepth<T>(this Component component, int captureDepth)
+            where T : Component
+        {
+            if (component == null) throw new ArgumentNullException("component");
+            if (captureDepth < 1) throw new ArgumentOutOfRangeException("captureDepth", "must be greater than 0");
+
+            return component.gameObject.GetComponentsInChildrenUpToDepth<T>(captureDepth);
         }
 
         /// <summary>
