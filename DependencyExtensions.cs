@@ -68,9 +68,11 @@ namespace Alquimiaware
             T defaultValue = null) where T : Component
         {
             T dependency = component.GetComponent<T>();
-            if (dependency == null)
+            if (dependency == null && scope >= Scope.Subtree)
                 dependency = component.GetComponentInChildren<T>();
-            if (scope == Scope.Scene && dependency == null)
+            if (dependency == null && scope >= Scope.Ancestor)
+                dependency = component.GetComponentInParent<T>();
+            if (dependency == null && scope >= Scope.Scene)
                 dependency = Component.FindObjectOfType<T>();
             if (dependency == null)
                 dependency = defaultValue;

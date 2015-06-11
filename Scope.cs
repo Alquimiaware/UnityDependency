@@ -8,16 +8,16 @@ namespace Alquimiaware
         /// <summary>
         /// The subtree from the object ( including it )
         /// </summary>
-        Subtree,
+        Subtree = 0,
 
         /// <summary>
         /// Any of the parents up to the root.
         /// </summary>
-        Ancestor,
+        Ancestor = 1,
 
         /// <summary>
         /// The scene
         /// </summary>
-        Scene
-    } 
+        Scene = 2
+    }
 }
