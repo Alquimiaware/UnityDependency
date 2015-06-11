@@ -125,7 +125,7 @@ namespace Alquimiaware
         }
 
         /// <summary>
-        /// Gets all the children up to an specific depth
+        /// Gets all the children up to a specific depth
         /// </summary>
         public static T[] GetComponentsInChildrenUpToDepth<T>(this GameObject go, int captureDepth)
             where T : Component
