@@ -40,7 +40,10 @@ namespace Alquimiaware
             if (child == null)
             {
                 child = new GameObject(name).transform;
-                child.SetParent(go.transform);
+                child.parent = go.transform;
+                child.localPosition = Vector3.zero;
+                child.localRotation = Quaternion.identity;
+                child.localScale = Vector3.one;
             }
 
             return child;
