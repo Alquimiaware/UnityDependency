@@ -2,10 +2,199 @@ namespace Alquimiaware
 {
     using System;
     using System.Linq;
+    using System.Reflection;
     using UnityEngine;
 
     public static class DependencyExtensions
     {
+        private const string FindDependencyExtensionName = "FindClosestComponent";
+        private const string AddComponentMethodName = "AddComponent";
+        private const string selfJumper = ".";
+        private const string parentJumper = "..";
+
+        public static void ForceRecaptureDependencies(this MonoBehaviour monoBehaviour)
+        {
+            var fieldInfos = GetFields(monoBehaviour);
+
+            foreach (var fi in fieldInfos)
+            {
+                var dependency = GetDependencyAttribute(fi);
+                if (dependency != null)
+                    fi.SetValue(monoBehaviour, null);
+            }
+
+            CaptureDependencies(monoBehaviour);
+        }
+
+        public static void CaptureDependencies(this MonoBehaviour monoBehaviour)
+        {
+            var fieldInfos = GetFields(monoBehaviour);
+
+
+            // Try capture all
+            foreach (var fi in fieldInfos)
+            {
+                var dependency = GetDependencyAttribute(fi);
+                if (dependency != null)
+                {
+                    // get current value, if is null, do nothing
+                    var value = fi.GetValue(monoBehaviour);
+                    if (value != null)
+                        continue;
+
+                    var findDependencyMethod = typeof(DependencyExtensions).GetMethod(FindDependencyExtensionName);
+                    var specifiedMethod = findDependencyMethod.MakeGenericMethod(fi.FieldType);
+                    // if is not null capture a dependency
+                    value = specifiedMethod.Invoke(null, new object[]
+                    {
+                        monoBehaviour, 
+                        dependency.SearchScope, 
+                        null
+                    });
+
+
+                    if (value != null)
+                        fi.SetValue(monoBehaviour, value);
+                }
+            }
+
+            // Generate defaults for not found dependencies
+            foreach (var fi in fieldInfos)
+            {
+                var value = fi.GetValue(monoBehaviour);
+                if (value != null)
+                    continue;
+
+                var dependency = GetDependencyAttribute(fi);
+                if (dependency == null)
+                    continue;
+
+                var defaultType = dependency.DefaultType ?? fi.FieldType;
+
+                // Create default value
+                var specificAddComp =
+                    typeof(GameObject).GetMethod(
+                    AddComponentMethodName,
+                    new Type[] { typeof(Type) }
+                    );
+
+                // Then use the path
+                if (dependency.DefaultPath != null)
+                {
+                    var segments = dependency.DefaultPath.Trim().Split('/');
+                    Transform currentNode = null;
+                    // Differentiate absolute from relative
+                    // ./ is relative
+                    // A direct name is absolute
+                    // / empty first slash is absolute
+                    if (segments.Length == 0)
+                    {
+                        // TODO: Can this happen with the split?
+                        // it would mean there are no slahes? Whan happens in this case?
+                        // Use self
+                    }
+                    else if (segments.Length > 0)
+                    {
+                        var first = segments[0].Trim();
+                        if (string.IsNullOrEmpty(first) ||
+                           (first != selfJumper && first != parentJumper))
+                        {
+                            // Is absolute
+                            foreach (var segment in segments)
+                            {
+                                if (string.IsNullOrEmpty(segment)
+                                    || segment == selfJumper)
+                                    continue;
+
+                                if (segment == parentJumper)
+                                {
+                                    if (currentNode != null && currentNode.parent != null)
+                                    {
+                                        currentNode = currentNode.parent;
+                                    }
+                                    else
+                                    {
+                                        string message = currentNode != null ?
+                                            string.Format("{0} has no parent") :
+                                            string.Format("root has no parent");
+
+                                        throw new ArgumentOutOfRangeException("DefaultPath", message);
+                                    }
+                                }
+                                else // Is a normal name
+                                {
+                                    if (currentNode == null)
+                                    {
+                                        var go = GameObject.Find("/" + segment);
+                                        if (go != null)
+                                            currentNode = go.transform;
+                                        else
+                                            currentNode = new GameObject(segment).transform;
+                                    }
+                                    else
+                                        currentNode = currentNode.GetOrAddChild(segment);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // Is Relative
+                            foreach (var segment in segments)
+                            {
+                                if (string.IsNullOrEmpty(segment))
+                                    continue;
+                                if (segment == selfJumper)
+                                {
+                                    currentNode = currentNode ?? monoBehaviour.transform;
+                                    continue;
+                                }
+
+                                if (segment == parentJumper)
+                                {
+                                    if (currentNode != null && currentNode.parent != null)
+                                    {
+                                        currentNode = currentNode.parent;
+                                    }
+                                    else
+                                    {
+                                        string message = currentNode != null ?
+                                            string.Format("{0} has no parent") :
+                                            string.Format("root has no parent");
+
+                                        throw new ArgumentOutOfRangeException("DefaultPath", message);
+                                    }
+                                }
+                                else // Is a normal name
+                                {
+                                    currentNode = currentNode.GetOrAddChild(segment);
+                                }
+                            }
+                        }
+
+                        value = specificAddComp.Invoke(
+                            currentNode.gameObject,
+                            new object[] { defaultType });
+                    }
+                }
+                else
+                {
+                    value = specificAddComp.Invoke(
+                    monoBehaviour.gameObject,
+                    new object[] { defaultType });
+                }
+
+                fi.SetValue(monoBehaviour, value);
+            }
+        }
+
+        public static bool HasDependencies(this MonoBehaviour monoBehaviour)
+        {
+            var fieldInfos = GetFields(monoBehaviour);
+
+            return fieldInfos.Any(fi =>
+                fi.GetCustomAttributes(typeof(DependencyAttribute), true).Length > 0);
+        }
+
         /// <summary>
         /// Gets a component, or add it if not found
         /// </summary>
@@ -188,6 +377,25 @@ namespace Alquimiaware
                     string.Format("'{0}' is not a descendant of '{1}'", other.name, relativeTo.name));
 
             return depth;
+        }
+
+        private static FieldInfo[] GetFields(MonoBehaviour monoBehaviour)
+        {
+            var type = monoBehaviour.GetType();
+
+            var fieldInfos = type.GetFields(
+                BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+            return fieldInfos;
+        }
+
+        private static DependencyAttribute GetDependencyAttribute(FieldInfo fi)
+        {
+            var fa = fi.GetCustomAttributes(typeof(DependencyAttribute), true);
+            var dependency =
+                fa.Any() ?
+                fa[0] as DependencyAttribute :
+                default(DependencyAttribute);
+            return dependency;
         }
     }
 }
