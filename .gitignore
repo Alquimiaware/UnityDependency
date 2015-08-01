@@ -1,7 +1,7 @@
 /Library/
 /Temp/
 /obj/
-*.csproj
+/*.csproj
 *.unityproj
-*.sln
+/*.sln
 *.suo
