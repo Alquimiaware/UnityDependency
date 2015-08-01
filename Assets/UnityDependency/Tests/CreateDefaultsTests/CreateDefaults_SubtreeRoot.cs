@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace UnityDependency.Test.Capture {
     [IntegrationTest.DynamicTest("CreateDefaultsTests")]
-    public class AssertCreateDefaults : MonoBehaviour {
+    public class CreateDefaults_SubtreeRoot : MonoBehaviour {
 
         private NephewsColliderCapture testedBehaviour = null;
 
