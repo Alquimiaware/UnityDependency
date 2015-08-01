@@ -5,7 +5,7 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityDependency", "UnityDependency.csproj", "{4612C245-8C40-4034-A2F4-92AA38DFCC1B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityDependencyEditor", "..\UnityDependencyEditor\UnityDependencyEditor.csproj", "{A43206B6-40B4-464A-9568-1613B8D3EBA3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityDependencyEditor", "Editor\UnityDependencyEditor.csproj", "{A43206B6-40B4-464A-9568-1613B8D3EBA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
