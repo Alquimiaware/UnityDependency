@@ -39,7 +39,7 @@ namespace Alquimiaware
                 {
                     // get current value, if is null, do nothing
                     var value = fi.GetValue(monoBehaviour);
-                    if (value != null)
+                    if (DependencyExtensions.IsValueDefined(value))
                         continue;
 
                     var findDependencyMethod = typeof(DependencyExtensions).GetMethod(FindDependencyExtensionName);
@@ -52,8 +52,7 @@ namespace Alquimiaware
                         null
                     });
 
-
-                    if (value != null)
+                    if (DependencyExtensions.IsValueDefined(value))
                         fi.SetValue(monoBehaviour, value);
                 }
             }
@@ -62,7 +61,7 @@ namespace Alquimiaware
             foreach (var fi in fieldInfos)
             {
                 var value = fi.GetValue(monoBehaviour);
-                if (value != null)
+                if (DependencyExtensions.IsValueDefined(value))
                     continue;
 
                 var dependency = GetDependencyAttribute(fi);
@@ -185,6 +184,20 @@ namespace Alquimiaware
 
                 fi.SetValue(monoBehaviour, value);
             }
+        }
+
+        /// <summary>
+        /// Determine if a value is defined, covering Unity's corner cases.
+        /// Unity objects, if their assignment is missing, return a string literal @"null", instead of <code>null</code>.
+        /// </summary>
+        /// <param name="value">Value to check.</param>
+        /// <returns><code>true</code> if the value is properly assigned; <code>false</code> otherwise.</returns>
+        private static bool IsValueDefined(object value)
+        {
+            if (value is UnityEngine.Object)
+                return ((UnityEngine.Object)value);
+
+            return value != null;
         }
 
         public static bool HasDependencies(this MonoBehaviour monoBehaviour)
