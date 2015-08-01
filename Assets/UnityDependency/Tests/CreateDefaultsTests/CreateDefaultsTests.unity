@@ -210,7 +210,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nephewCollider: {fileID: 0}
-  nieceCollider: {fileID: 0}
+  rootChildCollider: {fileID: 0}
 --- !u!1 &1742573160
 GameObject:
   m_ObjectHideFlags: 0
