@@ -4,7 +4,7 @@ using UnityTest;
 
 namespace UnityDependency.Test.Capture {
 
-    [IntegrationTest.DynamicTest("Test_CaptureNullFields")]
+    [IntegrationTest.DynamicTest("CaptureNullFieldsTests")]
     public class AssertCaptureNullFields : MonoBehaviour {
 
         private NephewsColliderCapture testObject = null;

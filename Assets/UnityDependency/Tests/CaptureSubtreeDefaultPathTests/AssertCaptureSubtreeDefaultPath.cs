@@ -2,7 +2,7 @@
 using UnityEngine;
 
 namespace UnityDependency.Test.Capture {
-    [IntegrationTest.DynamicTest("Test_CaptureSubtreeDefaultPath")]
+    [IntegrationTest.DynamicTest("CaptureSubtreeDefaultPathTests")]
     public class AssertCaptureSubtreeDefaultPath : MonoBehaviour {
 
         private NephewsColliderCapture testedBehaviour = null;
