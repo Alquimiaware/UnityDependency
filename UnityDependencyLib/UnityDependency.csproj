@@ -3,20 +3,19 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A43206B6-40B4-464A-9568-1613B8D3EBA3}</ProjectGuid>
+    <ProjectGuid>{4612C245-8C40-4034-A2F4-92AA38DFCC1B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <NoStandardLibraries>false</NoStandardLibraries>
-    <AssemblyName>UnityDependencyEditor</AssemblyName>
+    <AssemblyName>UnityDependency</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\..\UnityDependencyLib\Debug\</OutputPath>
-    <IntermediateOutputPath>..\..\..\..\..\UnityDependencyLib\obj\Editor\Debug\</IntermediateOutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -24,38 +23,27 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\..\..\UnityDependencyLib\Release\</OutputPath>
-    <IntermediateOutputPath>..\..\..\..\..\UnityDependencyLib\obj\Editor\Release\</IntermediateOutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <RootNamespace>UnityDependencyEditor</RootNamespace>
+    <RootNamespace>UnityDependency</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="UnityEditor">
-      <HintPath>C:\Program Files (x86)\Unity_4_5\Editor\Data\Managed\UnityEditor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>C:\Program Files (x86)\Unity_4_5\Editor\Data\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DependencyCaptureContextMenuItems.cs" />
-    <Compile Include="DependencyFieldDrawer.cs" />
+    <Compile Include="..\Assets\UnityDependency\Lib\DependencyAttribute.cs" />
+    <Compile Include="..\Assets\UnityDependency\Lib\DependencyExtensions.cs" />
+    <Compile Include="..\Assets\UnityDependency\Lib\Scope.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\UnityDependency.csproj">
-      <Project>{4612c245-8c40-4034-a2f4-92aa38dfcc1b}</Project>
-      <Name>UnityDependency</Name>
-      <Private>False</Private>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>
