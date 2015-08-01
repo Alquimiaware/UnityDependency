@@ -5,3 +5,5 @@
 *.unityproj
 /*.sln
 *.suo
+/UnityDependencyEditor/obj/
+/UnityDependencyLib/obj/
