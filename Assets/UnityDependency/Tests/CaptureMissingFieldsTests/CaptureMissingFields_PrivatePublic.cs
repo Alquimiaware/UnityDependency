@@ -1,15 +1,15 @@
-﻿using Alquimiaware;
-using UnityEngine;
-using UnityTest;
+﻿namespace UnityDependency.Test.Capture
+{
+    using Alquimiaware;
+    using UnityEngine;
 
-namespace UnityDependency.Test.Capture {
-
-    [IntegrationTest.DynamicTest("CaptureNullFieldsTests")]
-    public class CaptureNullFields_PrivatePublic : MonoBehaviour {
-
+    [IntegrationTest.DynamicTest("CaptureMissingFieldsTests")]
+    public class CaptureMissingFields_PrivatePublic : MonoBehaviour
+    {
         private NephewsColliderCapture testObject = null;
 
-        void Start() {
+        void Start()
+        {
             this.testObject = FindObjectOfType<NephewsColliderCapture>();
 
             var nephew = new GameObject("Temp_Nephew");

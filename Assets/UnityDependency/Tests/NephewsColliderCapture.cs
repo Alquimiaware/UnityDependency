@@ -1,10 +1,10 @@
-﻿using Alquimiaware;
-using UnityEngine;
-using UnityTest;
+﻿namespace UnityDependency.Test
+{
+    using Alquimiaware;
+    using UnityEngine;
 
-namespace UnityDependency.Test {
-    public class NephewsColliderCapture : MonoBehaviour {
-
+    public class NephewsColliderCapture : MonoBehaviour
+    {
         [SerializeField]
         [Dependency(Scope.Subtree, DefaultPath = "./Child/Nephew")]
         public BoxCollider nephewCollider = null;
@@ -12,12 +12,14 @@ namespace UnityDependency.Test {
         [SerializeField]
         [Dependency(Scope.Subtree, DefaultPath = "Root/Child")]
         private SphereCollider rootChildCollider = null;
-        public SphereCollider RootChildCollider {
+        public SphereCollider RootChildCollider
+        {
             get { return this.rootChildCollider; }
             set { this.rootChildCollider = value; }
         }
 
-        void Reset() {
+        void Reset()
+        {
             this.CaptureDependencies();
         }
     }
