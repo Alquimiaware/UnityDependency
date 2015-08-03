@@ -1,11 +1,13 @@
-﻿using Alquimiaware;
-using UnityEngine;
+﻿namespace UnityDependency.Test.CaptureDerived
+{
+    using Alquimiaware;
+    using UnityEngine;
 
-namespace UnityDependency.Test.CaptureDerived {
     [IntegrationTest.DynamicTest("CaptureDerivedTests")]
-    public class CaptureDerived_CaptureBaseClass : MonoBehaviour {
-
-        void Start() {
+    public class CaptureDerived_CaptureBaseClass : MonoBehaviour
+    {
+        void Start()
+        {
             DerivedContainer derivedContainer = FindObjectOfType<DerivedContainer>();
             DerivedClass derivedInstance = FindObjectOfType<DerivedClass>();
 
