@@ -1,18 +1,20 @@
-﻿using Alquimiaware;
-using UnityEngine;
-
-namespace UnityDependency.Test.CaptureScope {
+﻿namespace UnityDependency.Test.CaptureScope
+{
+    using Alquimiaware;
+    using UnityEngine;
 
     [IntegrationTest.DynamicTest("CaptureScopeTests")]
-    public class CaptureScope_Subtree : MonoBehaviour {
-
+    public class CaptureScope_Subtree : MonoBehaviour
+    {
         // Use this for initialization
-        void Start() {
+        void Start()
+        {
             CaptureScope captureScope = FindObjectOfType<CaptureScope>();
             StartCoroutine(this.CreateAndCapture(captureScope));
         }
 
-        System.Collections.IEnumerator CreateAndCapture(CaptureScope captureScope) {
+        System.Collections.IEnumerator CreateAndCapture(CaptureScope captureScope)
+        {
             BoxCollider subtreeCollider = captureScope.GetOrAddChild("Child").gameObject.AddComponent<BoxCollider>();
             SphereCollider ancestorCollider = subtreeCollider.GetOrAddChild("Grandchild").gameObject.AddComponent<SphereCollider>();
             CapsuleCollider sceneCollider = ancestorCollider.GetOrAddChild("Grand-grandchild").gameObject.AddComponent<CapsuleCollider>();
