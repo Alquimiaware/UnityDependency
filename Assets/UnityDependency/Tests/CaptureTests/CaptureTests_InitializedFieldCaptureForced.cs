@@ -1,13 +1,13 @@
-﻿using Alquimiaware;
-using UnityEngine;
-using UnityTest;
-
-namespace UnityDependency.Test.Capture {
+﻿namespace UnityDependency.Test.Capture
+{
+    using Alquimiaware;
+    using UnityEngine;
 
     [IntegrationTest.DynamicTest("CaptureTests")]
-    public class CaptureTests_InitializedFieldCaptureForced : MonoBehaviour {
-
-        void Start() {
+    public class CaptureTests_InitializedFieldCaptureForced : MonoBehaviour
+    {
+        void Start()
+        {
             NephewsColliderCapture testObject = FindObjectOfType<NephewsColliderCapture>();
 
             var origNephew = testObject.nephewCollider;
