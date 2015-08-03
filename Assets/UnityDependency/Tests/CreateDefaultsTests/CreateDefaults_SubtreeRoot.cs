@@ -1,13 +1,16 @@
-﻿using Alquimiaware;
-using UnityEngine;
+﻿namespace UnityDependency.Test.Capture
+{
+    using Alquimiaware;
+    using UnityEngine;
 
-namespace UnityDependency.Test.Capture {
     [IntegrationTest.DynamicTest("CreateDefaultsTests")]
-    public class CreateDefaults_SubtreeRoot : MonoBehaviour {
+    public class CreateDefaults_SubtreeRoot : MonoBehaviour
+    {
 
         private NephewsColliderCapture testedBehaviour = null;
 
-        void Start() {
+        void Start()
+        {
             this.testedBehaviour = FindObjectOfType<NephewsColliderCapture>();
 
             this.testedBehaviour.CaptureDependencies();
