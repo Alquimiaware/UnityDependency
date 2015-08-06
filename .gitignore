@@ -1,1 +1,9 @@
-*.meta
+/Library/
+/Temp/
+/obj/
+/*.csproj
+*.unityproj
+/*.sln
+*.suo
+/UnityDependencyLib/obj/
+/UnityDependencyLib/Editor/obj/
