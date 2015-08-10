@@ -98,8 +98,14 @@ namespace Alquimiaware
                         if (string.IsNullOrEmpty(first) ||
                            (first != selfJumper && first != parentJumper))
                         {
+                            var startGO = GameObject.Find("/" + segments[0]);
+                            if (startGO == null)
+                                startGO = new GameObject(segments[0]);
+
+                            currentNode = startGO.transform;
+
                             // Is absolute
-                            foreach (var segment in segments)
+                            foreach (var segment in segments.Skip(1))
                             {
                                 if (string.IsNullOrEmpty(segment)
                                     || segment == selfJumper)
@@ -122,14 +128,9 @@ namespace Alquimiaware
                                 }
                                 else // Is a normal name
                                 {
-                                    if (currentNode == null)
-                                    {
-                                        var go = GameObject.Find("/" + segment);
-                                        if (go != null)
-                                            currentNode = go.transform;
-                                        else
-                                            currentNode = new GameObject(segment).transform;
-                                    }
+                                    var go = currentNode.FindChild(segment);
+                                    if (go != null)
+                                        currentNode = go.transform;
                                     else
                                         currentNode = currentNode.GetOrAddChild(segment);
                                 }
@@ -137,16 +138,14 @@ namespace Alquimiaware
                         }
                         else
                         {
+                            currentNode = monoBehaviour.transform;
+
                             // Is Relative
                             foreach (var segment in segments)
                             {
-                                if (string.IsNullOrEmpty(segment))
+                                if (string.IsNullOrEmpty(segment)
+                                    || segment == selfJumper)
                                     continue;
-                                if (segment == selfJumper)
-                                {
-                                    currentNode = currentNode ?? monoBehaviour.transform;
-                                    continue;
-                                }
 
                                 if (segment == parentJumper)
                                 {
@@ -157,7 +156,7 @@ namespace Alquimiaware
                                     else
                                     {
                                         string message = currentNode != null ?
-                                            string.Format("{0} has no parent") :
+                                            string.Format("{0} has no parent", currentNode.gameObject.name) :
                                             string.Format("root has no parent");
 
                                         throw new ArgumentOutOfRangeException("DefaultPath", message);
