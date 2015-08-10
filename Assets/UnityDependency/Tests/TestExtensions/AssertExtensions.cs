@@ -53,6 +53,8 @@
                 IntegrationTest.Assert(refTransform.gameObject.name == tree[i], "GameObject '" + go.ToString() + "' is not part of root hierarchy '" + hierarchy + "'.");
                 refTransform = refTransform.parent;
             }
+
+            IntegrationTest.Assert(refTransform == null, "GameObject '" + go.ToString() + "' is part of an equivalent hierarchy, but it does not reach the root of the scene.");
         }
     }
 }
