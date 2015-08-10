@@ -8,7 +8,7 @@
     {
         void Start()
         {
-            NephewsColliderCapture testObject = FindObjectOfType<NephewsColliderCapture>();
+            CaptureScopeSampleDefaultPaths testObject = FindObjectOfType<CaptureScopeSampleDefaultPaths>();
 
             var origNephew = testObject.nephewCollider;
             var origRoot = testObject.RootChildCollider;

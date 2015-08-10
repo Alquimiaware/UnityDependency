@@ -95,11 +95,38 @@ namespace Alquimiaware
                     else if (segments.Length > 0)
                     {
                         var first = segments[0].Trim();
+                        if (string.IsNullOrEmpty(first) &&
+                            (segments.Length == 1 || string.IsNullOrEmpty(segments[1])))
+                        {
+                            throw new ArgumentOutOfRangeException("DefaultPath", "An empty slash is not a valid path; introduce a name in the default path of '" + fi.Name + "'.");
+                        }
+
                         if (string.IsNullOrEmpty(first) ||
                            (first != selfJumper && first != parentJumper))
                         {
+                            int skipped = 0;
+
+                            if (string.IsNullOrEmpty(first))
+                            {
+                                var startGO = GameObject.Find("/" + segments[1]);
+                                if (startGO == null)
+                                    startGO = new GameObject(segments[1]);
+
+                                currentNode = startGO.transform;
+                                skipped = 2;
+                            }
+                            else
+                            {
+                                var startGO = GameObject.Find("/" + segments[0]);
+                                if (startGO == null)
+                                    startGO = new GameObject(segments[0]);
+
+                                currentNode = startGO.transform;
+                                skipped = 1;
+                            }
+
                             // Is absolute
-                            foreach (var segment in segments)
+                            foreach (var segment in segments.Skip(skipped))
                             {
                                 if (string.IsNullOrEmpty(segment)
                                     || segment == selfJumper)
@@ -122,14 +149,9 @@ namespace Alquimiaware
                                 }
                                 else // Is a normal name
                                 {
-                                    if (currentNode == null)
-                                    {
-                                        var go = GameObject.Find("/" + segment);
-                                        if (go != null)
-                                            currentNode = go.transform;
-                                        else
-                                            currentNode = new GameObject(segment).transform;
-                                    }
+                                    var go = currentNode.FindChild(segment);
+                                    if (go != null)
+                                        currentNode = go.transform;
                                     else
                                         currentNode = currentNode.GetOrAddChild(segment);
                                 }
@@ -137,16 +159,14 @@ namespace Alquimiaware
                         }
                         else
                         {
+                            currentNode = monoBehaviour.transform;
+
                             // Is Relative
                             foreach (var segment in segments)
                             {
-                                if (string.IsNullOrEmpty(segment))
+                                if (string.IsNullOrEmpty(segment)
+                                    || segment == selfJumper)
                                     continue;
-                                if (segment == selfJumper)
-                                {
-                                    currentNode = currentNode ?? monoBehaviour.transform;
-                                    continue;
-                                }
 
                                 if (segment == parentJumper)
                                 {
@@ -157,7 +177,7 @@ namespace Alquimiaware
                                     else
                                     {
                                         string message = currentNode != null ?
-                                            string.Format("{0} has no parent") :
+                                            string.Format("{0} has no parent", currentNode.gameObject.name) :
                                             string.Format("root has no parent");
 
                                         throw new ArgumentOutOfRangeException("DefaultPath", message);

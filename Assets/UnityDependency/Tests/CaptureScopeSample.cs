@@ -1,9 +1,9 @@
-﻿namespace UnityDependency.Test.CaptureScope
+﻿namespace UnityDependency.Test
 {
 using Alquimiaware;
 using UnityEngine;
 
-    public class CaptureScope : MonoBehaviour
+    public class CaptureScopeSample : MonoBehaviour
     {
         [SerializeField]
         [Dependency(Scope.Subtree)]
