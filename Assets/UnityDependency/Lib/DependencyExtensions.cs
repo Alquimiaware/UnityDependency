@@ -95,17 +95,38 @@ namespace Alquimiaware
                     else if (segments.Length > 0)
                     {
                         var first = segments[0].Trim();
+                        if (string.IsNullOrEmpty(first) &&
+                            (segments.Length == 1 || string.IsNullOrEmpty(segments[1])))
+                        {
+                            throw new ArgumentOutOfRangeException("DefaultPath", "An empty slash is not a valid path; introduce a name in the default path of '" + fi.Name + "'.");
+                        }
+
                         if (string.IsNullOrEmpty(first) ||
                            (first != selfJumper && first != parentJumper))
                         {
-                            var startGO = GameObject.Find("/" + segments[0]);
-                            if (startGO == null)
-                                startGO = new GameObject(segments[0]);
+                            int skipped = 0;
 
-                            currentNode = startGO.transform;
+                            if (string.IsNullOrEmpty(first))
+                            {
+                                var startGO = GameObject.Find("/" + segments[1]);
+                                if (startGO == null)
+                                    startGO = new GameObject(segments[1]);
+
+                                currentNode = startGO.transform;
+                                skipped = 2;
+                            }
+                            else
+                            {
+                                var startGO = GameObject.Find("/" + segments[0]);
+                                if (startGO == null)
+                                    startGO = new GameObject(segments[0]);
+
+                                currentNode = startGO.transform;
+                                skipped = 1;
+                            }
 
                             // Is absolute
-                            foreach (var segment in segments.Skip(1))
+                            foreach (var segment in segments.Skip(skipped))
                             {
                                 if (string.IsNullOrEmpty(segment)
                                     || segment == selfJumper)
