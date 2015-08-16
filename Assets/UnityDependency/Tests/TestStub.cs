@@ -14,9 +14,7 @@
         /// </summary>
         protected abstract void TearDown();
 
-        ///////////////////////
-        // Assertion helpers //
-        ///////////////////////
+        #region Assertion helpers
 
         protected void AssertIsSame(Object obj1, Object obj2)
         {
@@ -70,5 +68,7 @@
 
             IntegrationTest.Assert(refTransform == null, "GameObject '" + go.ToString() + "' is part of an equivalent hierarchy, but it does not reach the root of the scene.");
         }
+
+        #endregion
     }
 }
