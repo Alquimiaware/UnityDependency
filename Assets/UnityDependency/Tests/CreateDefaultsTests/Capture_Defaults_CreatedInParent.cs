@@ -1,36 +1,30 @@
 ﻿namespace UnityDependency.Test.CreateDefaultsTests
 {
     using Alquimiaware;
-    using AssertExtensions;
     using UnityEngine;
     using UnityHelpers;
 
     [IntegrationTest.DynamicTest("CreateDefaultsTests")]
-    public class Capture_Defaults_CreatedInParent : MonoBehaviour
+    public class Capture_Defaults_CreatedInParent : TestFrame
     {
         private CaptureScopeSampleDefaultPathParent testSubject = null;
 
-        void Start()
+        protected override void SetUp()
         {
             GameObject[] gos = UnityHelpers.CreateHierarchy("Parent", "Subject");
             this.testSubject = gos[1].AddComponent<CaptureScopeSampleDefaultPathParent>();
         }
 
-        void Update()
+        protected override void Execute()
         {
-            try
-            {
-                this.testSubject.CaptureDependencies();
-                this.testSubject.ParentCollider.gameObject.AssertIsSubtree(this.testSubject.gameObject, "Subject");
-            }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                DestroyImmediate(this.testSubject.gameObject.transform.parent.gameObject);
-            }
+            this.testSubject.CaptureDependencies();
+
+            this.AssertIsSubtree(this.testSubject.ParentCollider.gameObject, this.testSubject.gameObject, "Subject");
+        }
+
+        protected override void TearDown()
+        {
+            DestroyImmediate(this.testSubject.gameObject.transform.parent.gameObject);
         }
     }
 }

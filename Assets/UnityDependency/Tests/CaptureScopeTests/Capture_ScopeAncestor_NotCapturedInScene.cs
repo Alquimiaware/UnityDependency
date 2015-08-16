@@ -2,16 +2,14 @@
 {
     using Alquimiaware;
     using UnityEngine;
-    using UnityDependency.Test.AssertExtensions;
-    using UnityDependency.Test.UnityHelpers;
 
     [IntegrationTest.DynamicTest("CaptureScopeTests")]
-    public class Capture_ScopeAncestor_NotCapturedInScene : MonoBehaviour
+    public class Capture_ScopeAncestor_NotCapturedInScene : TestFrame
     {
         CaptureScopeSample testSubject = null;
         SphereCollider testTarget = null;
 
-        void Start()
+        protected override void SetUp()
         {
             GameObject subjectGO = new GameObject("Subject");
             GameObject targetGO = new GameObject("Target");
@@ -19,11 +17,14 @@
             this.testTarget = targetGO.AddComponent<SphereCollider>();
         }
 
-        void Update()
+        protected override void Execute()
         {
             this.testSubject.CaptureDependencies();
-            this.testSubject.AncestorCollider.AssertIsOther(this.testTarget);
+            this.AssertIsOther(this.testSubject.AncestorCollider, this.testTarget);
+        }
 
+        protected override void TearDown()
+        {
             DestroyImmediate(this.testSubject.gameObject);
             DestroyImmediate(this.testTarget.gameObject);
         }

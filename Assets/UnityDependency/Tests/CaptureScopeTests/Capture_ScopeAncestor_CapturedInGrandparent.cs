@@ -1,28 +1,30 @@
 ﻿namespace UnityDependency.Test.CaptureScope
 {
     using Alquimiaware;
-    using UnityEngine;
-    using UnityDependency.Test.AssertExtensions;
     using UnityDependency.Test.UnityHelpers;
+    using UnityEngine;
 
     [IntegrationTest.DynamicTest("CaptureScopeTests")]
-    public class Capture_ScopeAncestor_CapturedInGrandparent : MonoBehaviour
+    public class Capture_ScopeAncestor_CapturedInGrandparent : TestFrame
     {
         CaptureScopeSample testSubject = null;
         SphereCollider testTarget = null;
 
-        void Start()
+        protected override void SetUp()
         {
             GameObject[] testGOs = UnityHelpers.CreateHierarchy("Grandparent", "Parent", "Subject");
             this.testSubject = testGOs[2].AddComponent<CaptureScopeSample>();
             this.testTarget = testGOs[0].AddComponent<SphereCollider>();
         }
 
-        void Update()
+        protected override void Execute()
         {
             this.testSubject.CaptureDependencies();
-            this.testSubject.AncestorCollider.AssertIsSame(this.testTarget);
+            this.AssertIsSame(this.testSubject.AncestorCollider, this.testTarget);
+        }
 
+        protected override void TearDown()
+        {
             DestroyImmediate(this.testTarget.gameObject);
         }
     }

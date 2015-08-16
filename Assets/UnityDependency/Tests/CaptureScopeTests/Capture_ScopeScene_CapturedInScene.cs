@@ -2,16 +2,14 @@
 {
     using Alquimiaware;
     using UnityEngine;
-    using UnityDependency.Test.AssertExtensions;
-    using UnityDependency.Test.UnityHelpers;
 
     [IntegrationTest.DynamicTest("CaptureScopeTests")]
-    public class Capture_ScopeScene_CapturedInScene : MonoBehaviour
+    public class Capture_ScopeScene_CapturedInScene : TestFrame
     {
         CaptureScopeSample testSubject = null;
         CapsuleCollider testTarget = null;
 
-        void Start()
+        protected override void SetUp()
         {
             GameObject subjectGO = new GameObject("Subject");
             GameObject targetGO = new GameObject("Target");
@@ -19,11 +17,14 @@
             this.testTarget = targetGO.AddComponent<CapsuleCollider>();
         }
 
-        void Update()
+        protected override void Execute()
         {
             this.testSubject.CaptureDependencies();
-            this.testSubject.SceneCollider.AssertIsSame(this.testTarget);
+            this.AssertIsSame(this.testSubject.SceneCollider, this.testTarget);
+        }
 
+        protected override void TearDown()
+        {
             DestroyImmediate(this.testSubject.gameObject);
             DestroyImmediate(this.testTarget.gameObject);
         }

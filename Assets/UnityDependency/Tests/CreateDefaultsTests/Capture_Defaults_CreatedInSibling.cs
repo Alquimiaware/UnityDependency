@@ -2,16 +2,15 @@
 {
     using Alquimiaware;
     using UnityEngine;
-    using AssertExtensions;
     using UnityHelpers;
 
     [IntegrationTest.DynamicTest("CreateDefaultsTests")]
-    public class Capture_Defaults_CreatedInSibling : MonoBehaviour
+    public class Capture_Defaults_CreatedInSibling : TestFrame
     {
         private CaptureScopeSampleDefaultPaths testSubject = null;
         private GameObject testTarget = null;
 
-        void Start()
+        protected override void SetUp()
         {
             GameObject[] gos = UnityHelpers.CreateHierarchy("Grandparent", "Parent", "Subject");
             this.testSubject = gos[2].AddComponent<CaptureScopeSampleDefaultPaths>();
@@ -20,23 +19,17 @@
             this.testTarget.transform.parent = gos[1].transform;
         }
 
-        void Update()
+        protected override void Execute()
         {
-            try
-            {
-                this.testSubject.CaptureDependencies();
+            this.testSubject.CaptureDependencies();
 
-                this.testSubject.SiblingCollider.gameObject.AssertIsSame(this.testTarget);
-            }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                DestroyImmediate(this.testSubject.transform.parent.parent.gameObject);
-                DestroyImmediate(this.testTarget.gameObject);
-            }
+            this.AssertIsSame(this.testSubject.SiblingCollider.gameObject, this.testTarget);
+        }
+
+        protected override void TearDown()
+        {
+            DestroyImmediate(this.testSubject.transform.parent.parent.gameObject);
+            DestroyImmediate(this.testTarget.gameObject);
         }
     }
 }

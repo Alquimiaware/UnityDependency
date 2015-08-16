@@ -2,26 +2,28 @@
 {
     using Alquimiaware;
     using UnityEngine;
-    using UnityDependency.Test.AssertExtensions;
 
     [IntegrationTest.DynamicTest("CaptureScopeTests")]
-    public class Capture_ScopeSubtree_CapturedInSelf : MonoBehaviour
+    public class Capture_ScopeSubtree_CapturedInSelf : TestFrame
     {
         CaptureScopeSample testSubject = null;
         BoxCollider testTarget = null;
 
-        void Start()
+        protected override void SetUp()
         {
             GameObject testGO = new GameObject("Subject");
             this.testSubject = testGO.AddComponent<CaptureScopeSample>();
             this.testTarget = testGO.AddComponent<BoxCollider>();
         }
 
-        void Update()
+        protected override void Execute()
         {
             this.testSubject.CaptureDependencies();
-            this.testSubject.subtreeCollider.AssertIsSame(this.testTarget);
+            this.AssertIsSame(this.testSubject.subtreeCollider, this.testTarget);
+        }
 
+        protected override void TearDown()
+        {
             DestroyImmediate(this.testSubject.gameObject);
         }
     }

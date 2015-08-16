@@ -1,9 +1,7 @@
 ﻿namespace UnityDependency.Test.CreateDefaultsTests
 {
     using Alquimiaware;
-    using AssertExtensions;
     using UnityEngine;
-    using UnityHelpers;
 
     /// <summary>
     /// This test verifies that, on a component at the root of the scene,
@@ -12,30 +10,24 @@
     /// </summary>
     [IntegrationTest.DynamicTest("CreateDefaultsTests")]
     [IntegrationTest.ExpectExceptions(succeedOnException = true, exceptionTypeNames = new string[] { "ArgumentOutOfRangeException" })]
-    public class Capture_Defaults_CannotCreateInRoot : MonoBehaviour
+    public class Capture_Defaults_CannotCreateInRoot : TestFrame
     {
         private CaptureScopeSampleDefaultPathParentSelf testSubject = null;
 
-        void Start()
+        protected override void SetUp()
         {
             GameObject subjectGO = new GameObject("Subject");
             this.testSubject = subjectGO.AddComponent<CaptureScopeSampleDefaultPathParentSelf>();
         }
 
-        void Update()
+        protected override void Execute()
         {
-            try
-            {
-                this.testSubject.CaptureDependencies();
-            }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                DestroyImmediate(this.testSubject.gameObject);
-            }
+            this.testSubject.CaptureDependencies();
+        }
+
+        protected override void TearDown()
+        {
+            DestroyImmediate(this.testSubject.gameObject);
         }
     }
 }

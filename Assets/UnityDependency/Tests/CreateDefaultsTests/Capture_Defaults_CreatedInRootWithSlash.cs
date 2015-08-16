@@ -1,37 +1,30 @@
 ﻿namespace UnityDependency.Test.CreateDefaultsTests
 {
+    using Alquimiaware;
     using UnityEngine;
     using UnityHelpers;
-    using Alquimiaware;
-    using AssertExtensions;
 
     [IntegrationTest.DynamicTest("CreateDefaultsTests")]
-    public class Capture_Defaults_CreatedInRootWithSlash : MonoBehaviour
+    public class Capture_Defaults_CreatedInRootWithSlash : TestFrame
     {
         private CaptureSampleDefaultPathWithSlash testSubject = null;
 
-        void Start()
+        protected override void SetUp()
         {
             this.testSubject = new GameObject("Subject").AddComponent<CaptureSampleDefaultPathWithSlash>();
         }
 
-        void Update()
+        protected override void Execute()
         {
-            try
-            {
-                this.testSubject.CaptureDependencies();
+            this.testSubject.CaptureDependencies();
 
-                this.testSubject.RootCollider.gameObject.AssertIsTree("Root");
-            }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                DestroyImmediate(this.testSubject.RootCollider.gameObject);
-                DestroyImmediate(this.testSubject.gameObject);
-            }
+            this.AssertIsTree(this.testSubject.RootCollider.gameObject, "Root");
+        }
+
+        protected override void TearDown()
+        {
+            DestroyImmediate(this.testSubject.RootCollider.gameObject);
+            DestroyImmediate(this.testSubject.gameObject);
         }
     }
 }

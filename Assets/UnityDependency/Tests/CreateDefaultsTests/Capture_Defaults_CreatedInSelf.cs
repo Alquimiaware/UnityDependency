@@ -2,37 +2,31 @@
 {
     using Alquimiaware;
     using UnityEngine;
-    using AssertExtensions;
 
     [IntegrationTest.DynamicTest("CreateDefaultsTests")]
-    public class Capture_Defaults_CreatedInSelf : MonoBehaviour
+    public class Capture_Defaults_CreatedInSelf : TestFrame
     {
         private CaptureScopeSample testSubject = null;
 
-        void Start()
+        protected override void SetUp()
         {
             GameObject subjectGO = new GameObject("Subject");
             this.testSubject = subjectGO.AddComponent<CaptureScopeSample>();
         }
 
-        void Update()
+        protected override void Execute()
         {
-            try
-            {
-                this.testSubject.CaptureDependencies();
+            this.testSubject.CaptureDependencies();
 
-                this.testSubject.gameObject.AssertContainsComponents(this.testSubject.subtreeCollider,
-                                                                     this.testSubject.AncestorCollider,
-                                                                     this.testSubject.SceneCollider);
-            }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                DestroyImmediate(this.testSubject.gameObject);
-            }
+            this.AssertContainsComponents(this.testSubject.gameObject,
+                                          this.testSubject.subtreeCollider,
+                                          this.testSubject.AncestorCollider,
+                                          this.testSubject.SceneCollider);
+        }
+
+        protected override void TearDown()
+        {
+            DestroyImmediate(this.testSubject.gameObject);
         }
     }
 }
