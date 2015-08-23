@@ -34,12 +34,12 @@
 
         protected void AssertIsAssigned(Object obj)
         {
-            IntegrationTest.Assert(obj, "Object '" + obj.ToString() + "' has no value assigned");
+            IntegrationTest.Assert(obj == true, "Object has no value assigned");
         }
 
         protected void AssertIsUnassigned(Object obj)
         {
-            IntegrationTest.Assert(!obj, "Object '" + obj.ToString() + "' has a value assigned");
+            IntegrationTest.Assert(!obj, "Object has a value assigned");
         }
 
         protected void AssertIsSubtree(GameObject go, GameObject otherGO, string hierarchy)
