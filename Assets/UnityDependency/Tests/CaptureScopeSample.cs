@@ -27,17 +27,6 @@ using UnityEngine;
             set { this.sceneCollider = value; }
         }
 
-        public void Reset()
-        {
-            this.subtreeCollider = null;
-            this.ancestorCollider = null;
-            this.sceneCollider = null;
-
-            this.RemoveComponent<BoxCollider>();
-            this.RemoveComponent<SphereCollider>();
-            this.RemoveComponent<CapsuleCollider>();
-        }
-
         private void RemoveComponent<T>() where T : Component
         {
             T component = this.GetComponent<T>();
