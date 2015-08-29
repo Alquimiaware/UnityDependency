@@ -7,16 +7,15 @@
 
     public abstract partial class DependencyExtension_ParentChain
     {
-        [TestFixture]
         public class ScopeSubtree : DependencyExtension_ParentChain
         {
             [Test]
-            public void Capture_CandidateInScene_IsNotCaptured()
+            public void Capture_CandidateInSelf_IsCaptured()
             {
-                var candidate = this.goBuilder.CreateInRoot<BoxCollider>("Candidate");
+                var candidate = this.parentChain.Self.AddComponent<BoxCollider>();
 
                 this.sut.CaptureDependencies();
-                Assert.AreNotSame(sut.subtreeCollider, candidate);
+                Assert.AreSame(sut.subtreeCollider, candidate);
             }
 
             [Test]
@@ -38,18 +37,18 @@
             }
 
             [Test]
-            public void Capture_CandidateInSelf_IsCaptured()
-            {
-                var candidate = this.parentChain.Self.AddComponent<BoxCollider>();
-
-                this.sut.CaptureDependencies();
-                Assert.AreSame(sut.subtreeCollider, candidate);
-            }
-
-            [Test]
             public void Capture_CandidateInParent_IsNotCaptured()
             {
                 var candidate = this.parentChain.Parent.AddComponent<BoxCollider>();
+
+                this.sut.CaptureDependencies();
+                Assert.AreNotSame(sut.subtreeCollider, candidate);
+            }
+
+            [Test]
+            public void Capture_CandidateInScene_IsNotCaptured()
+            {
+                var candidate = this.goBuilder.CreateInRoot<BoxCollider>("Candidate");
 
                 this.sut.CaptureDependencies();
                 Assert.AreNotSame(sut.subtreeCollider, candidate);
