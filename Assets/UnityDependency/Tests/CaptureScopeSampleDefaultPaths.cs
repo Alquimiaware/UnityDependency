@@ -3,7 +3,7 @@
     using Alquimiaware;
     using UnityEngine;
 
-    public class NephewsColliderCapture : MonoBehaviour
+    public class CaptureScopeSampleDefaultPaths : MonoBehaviour
     {
         [SerializeField]
         [Dependency(Scope.Subtree, DefaultPath = "./Child/Nephew")]
@@ -16,6 +16,15 @@
         {
             get { return this.rootChildCollider; }
             set { this.rootChildCollider = value; }
+        }
+
+        [SerializeField]
+        [Dependency(Scope.Subtree, DefaultPath = "../../Parent/./Sibling")]
+        private CapsuleCollider siblingCollider = null;
+        public CapsuleCollider SiblingCollider
+        {
+            get { return this.siblingCollider; }
+            set { this.siblingCollider = value; }
         }
 
         void Reset()
