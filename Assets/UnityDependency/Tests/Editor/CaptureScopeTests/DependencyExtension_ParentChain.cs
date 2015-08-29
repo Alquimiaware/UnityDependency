@@ -1,19 +1,17 @@
 ﻿namespace UnityDependency.Test.CaptureScope
 {
     using System.Collections.Generic;
-    using Alquimiaware;
     using NUnit.Framework;
     using UnityEngine;
-    using UnityHelpers;
 
     [TestFixture]
-    public class DependencyExtension_ScopeSubtree
+    public abstract partial class DependencyExtension_ParentChain
     {
-        private Builder goBuilder;
-        private ParentChain parentChain;
-        private CaptureScopeSample sut;
+        protected Builder goBuilder;
+        protected ParentChain parentChain;
+        protected CaptureScopeSample sut;
 
-        private class ParentChain
+        protected class ParentChain
         {
             public GameObject Grandparent { get; set; }
             public GameObject Parent { get; set; }
@@ -22,7 +20,7 @@
             public GameObject Grandchild { get; set; }
         }
 
-        private class Builder
+        protected class Builder
         {
             private List<GameObject> createdObjects = new List<GameObject>();
 
@@ -75,7 +73,7 @@
         }
 
         [SetUp]
-        public void SetUp()
+        public void ParentChainSetUp()
         {
             this.goBuilder = new Builder();
             this.parentChain = this.goBuilder.CreateHierarchy();
@@ -84,57 +82,12 @@
         }
 
         [TearDown]
-        public void TearDown()
+        public void ParentChainTearDown()
         {
             this.goBuilder.TearDown();
             this.goBuilder = null;
             this.parentChain = null;
             this.sut = null;
-        }
-
-        [Test]
-        public void Capture_CandidateInScene_IsNotCaptured()
-        {
-            var candidate = this.goBuilder.CreateInRoot<BoxCollider>("Candidate");
-
-            this.sut.CaptureDependencies();
-            Assert.AreNotSame(sut.subtreeCollider, candidate);
-        }
-
-        [Test]
-        public void Capture_CandidateInChild_IsCaptured()
-        {
-            var candidate = this.parentChain.Child.AddComponent<BoxCollider>();
-
-            this.sut.CaptureDependencies();
-            Assert.AreSame(sut.subtreeCollider, candidate);
-        }
-
-        [Test]
-        public void Capture_CandidateInGrandchild_IsCaptured()
-        {
-            var candidate = this.parentChain.Grandchild.AddComponent<BoxCollider>();
-
-            this.sut.CaptureDependencies();
-            Assert.AreSame(sut.subtreeCollider, candidate);
-        }
-
-        [Test]
-        public void Capture_CandidateInSelf_IsCaptured()
-        {
-            var candidate = this.parentChain.Self.AddComponent<BoxCollider>();
-
-            this.sut.CaptureDependencies();
-            Assert.AreSame(sut.subtreeCollider, candidate);
-        }
-
-        [Test]
-        public void Capture_CandidateInParent_IsNotCaptured()
-        {
-            var candidate = this.parentChain.Parent.AddComponent<BoxCollider>();
-
-            this.sut.CaptureDependencies();
-            Assert.AreNotSame(sut.subtreeCollider, candidate);
         }
     }
 }
