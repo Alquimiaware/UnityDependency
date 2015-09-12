@@ -6,11 +6,11 @@
     [IntegrationTest.DynamicTest("CaptureMissingFieldsTests")]
     public class CaptureMissingFields_PrivatePublic : MonoBehaviour
     {
-        private NephewsColliderCapture testObject = null;
+        private CaptureScopeSampleDefaultPaths testObject = null;
 
         void Start()
         {
-            this.testObject = FindObjectOfType<NephewsColliderCapture>();
+            this.testObject = FindObjectOfType<CaptureScopeSampleDefaultPaths>();
 
             var nephew = new GameObject("Temp_Nephew");
             var nephewCollider = nephew.AddComponent<BoxCollider>();
