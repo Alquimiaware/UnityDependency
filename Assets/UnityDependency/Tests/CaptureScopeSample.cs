@@ -1,9 +1,9 @@
-﻿namespace UnityDependency.Test.CaptureScope
+﻿namespace UnityDependency.Test
 {
 using Alquimiaware;
 using UnityEngine;
 
-    public class CaptureScope : MonoBehaviour
+    public class CaptureScopeSample : MonoBehaviour
     {
         [SerializeField]
         [Dependency(Scope.Subtree)]
@@ -25,17 +25,6 @@ using UnityEngine;
         {
             get { return this.sceneCollider; }
             set { this.sceneCollider = value; }
-        }
-
-        public void Reset()
-        {
-            this.subtreeCollider = null;
-            this.ancestorCollider = null;
-            this.sceneCollider = null;
-
-            this.RemoveComponent<BoxCollider>();
-            this.RemoveComponent<SphereCollider>();
-            this.RemoveComponent<CapsuleCollider>();
         }
 
         private void RemoveComponent<T>() where T : Component
