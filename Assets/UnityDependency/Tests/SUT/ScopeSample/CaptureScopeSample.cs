@@ -1,4 +1,4 @@
-﻿namespace UnityDependency.Test
+﻿namespace UnityDependency.Test.SUT.CaptureScope
 {
 using Alquimiaware;
 using UnityEngine;

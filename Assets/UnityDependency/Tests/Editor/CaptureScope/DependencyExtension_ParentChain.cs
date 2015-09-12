@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using NUnit.Framework;
+    using UnityDependency.Test.SUT.CaptureScope;
     using UnityEngine;
 
     [TestFixture]
