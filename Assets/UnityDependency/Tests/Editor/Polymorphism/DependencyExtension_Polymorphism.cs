@@ -1,8 +1,8 @@
 ﻿namespace UnityDependency.Test.Polymorphism
 {
     using System.Collections.Generic;
-    using UnityDependency.Test.SUT.Polymorphism;
     using NUnit.Framework;
+    using UnityDependency.Test.SUT.Polymorphism;
     using UnityEngine;
 
     [TestFixture]
