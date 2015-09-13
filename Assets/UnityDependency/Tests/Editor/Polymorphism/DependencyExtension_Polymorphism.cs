@@ -10,15 +10,6 @@
     {
         protected Builder goBuilder;
 
-        protected class ParentChain
-        {
-            public GameObject Grandparent { get; set; }
-            public GameObject Parent { get; set; }
-            public GameObject Self { get; set; }
-            public GameObject Child { get; set; }
-            public GameObject Grandchild { get; set; }
-        }
-
         protected class Builder
         {
             private List<GameObject> createdObjects = new List<GameObject>();
