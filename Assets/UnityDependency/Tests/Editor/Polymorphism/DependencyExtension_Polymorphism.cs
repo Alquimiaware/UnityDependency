@@ -1,8 +1,8 @@
 ﻿namespace UnityDependency.Test.Polymorphism
 {
     using System.Collections.Generic;
+    using Alquimiaware;
     using NUnit.Framework;
-    using UnityDependency.Test.SUT.Polymorphism;
     using UnityEngine;
 
     [TestFixture]
@@ -69,6 +69,59 @@
                     Object.DestroyImmediate(obj);
 
                 this.createdObjects.Clear();
+            }
+
+            public abstract class HierarchyAbstract : MonoBehaviour
+            {
+                [SerializeField]
+                [Dependency(Scope.Scene)]
+                protected BoxCollider baseProtectedField = null;
+                public BoxCollider BaseProtectedField { get { return this.baseProtectedField; } }
+
+                [SerializeField]
+                [Dependency(Scope.Scene)]
+                private CapsuleCollider basePrivateField = null;
+                public CapsuleCollider BasePrivateField { get { return this.basePrivateField; } }
+            }
+
+            public class HierarchyDerived : HierarchyAbstract
+            {
+                [SerializeField]
+                [Dependency(Scope.Scene)]
+                private SphereCollider derivedField = null;
+                public SphereCollider DerivedField { get { return this.derivedField; } }
+            }
+
+            public class DependAbstract : MonoBehaviour
+            {
+                [SerializeField]
+                [Dependency(Scope.Scene)]
+                private HierarchyAbstract abstractField = null;
+                public HierarchyAbstract Abstract { get { return this.abstractField; } }
+            }
+
+            public class DependAbstractDefaultAbstract : MonoBehaviour
+            {
+                [SerializeField]
+                [Dependency(Scope.Scene, DefaultType = typeof(HierarchyAbstract))]
+                private HierarchyAbstract abstractField = null;
+                public HierarchyAbstract Abstract { get { return this.abstractField; } }
+            }
+
+            public class DependAbstractDefaultDerived : MonoBehaviour
+            {
+                [SerializeField]
+                [Dependency(Scope.Scene, DefaultType = typeof(HierarchyDerived))]
+                private HierarchyDerived derived = null;
+                public HierarchyDerived Derived { get { return this.derived; } }
+            }
+
+            public class DependDerived : MonoBehaviour
+            {
+                [SerializeField]
+                [Dependency(Scope.Scene)]
+                private HierarchyDerived derived = null;
+                public HierarchyDerived Derived { get { return this.derived; } }
             }
         }
 
