@@ -401,11 +401,11 @@ namespace Alquimiaware
         private static IEnumerable<FieldInfo> GetFields(Type type)
         {
             var fieldInfos = type.GetFields(
-                BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+                BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
             Type baseType = type.BaseType;
             if (baseType != null)
-                return fieldInfos.Concat(GetFields(baseType)).Distinct();
+                return fieldInfos.Concat(GetFields(baseType));
 
             return fieldInfos;
         }
