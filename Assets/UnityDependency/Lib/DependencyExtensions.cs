@@ -8,6 +8,26 @@ namespace Alquimiaware
 
     public static class DependencyExtensions
     {
+        static DependencyExtensions()
+        {
+            ErrorEmissor = new UnityErrorEmissor();
+        }
+
+        private static void NotifyError(string message)
+        {
+            if (ErrorEmissor != null)
+                ErrorEmissor.NotifyError(message);
+        }
+
+        private static void NotifyErrorFormat(string message, params object[] args)
+        {
+            if (ErrorEmissor != null)
+            {
+                string formattedMessage = string.Format(message, args);
+                ErrorEmissor.NotifyError(formattedMessage);
+            }
+        }
+
         private const string FindDependencyExtensionName = "FindClosestComponent";
         private const string AddComponentMethodName = "AddComponent";
         private const string selfJumper = ".";
@@ -418,6 +438,21 @@ namespace Alquimiaware
                 fa[0] as DependencyAttribute :
                 default(DependencyAttribute);
             return dependency;
+        }
+
+        public interface IErrorEmissor
+        {
+            void NotifyError(string message);
+        }
+
+        public static IErrorEmissor ErrorEmissor { get; set; }
+
+        public class UnityErrorEmissor : IErrorEmissor
+        {
+            public void NotifyError(string message)
+            {
+                UnityEngine.Debug.LogError(message);
+            }
         }
     }
 }
