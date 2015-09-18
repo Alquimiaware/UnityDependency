@@ -91,6 +91,15 @@ namespace Alquimiaware
 
                 var defaultType = dependency.DefaultType ?? fi.FieldType;
 
+                if (defaultType.IsAbstract)
+                {
+                    NotifyErrorFormat("Field '{1}' in class '{0}' must have a non-abstract DefaultType. Current DefaultType is '{2}'.",
+                                      fi.DeclaringType.Name,
+                                      fi.Name,
+                                      defaultType.Name);
+                    continue;
+                }
+
                 // Create default value
                 var specificAddComp =
                     typeof(GameObject).GetMethod(
