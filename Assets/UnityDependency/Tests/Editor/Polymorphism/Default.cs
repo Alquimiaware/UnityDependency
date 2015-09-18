@@ -3,7 +3,7 @@
     using Alquimiaware;
     using NUnit.Framework;
 
-    public partial class DependencyExtension_Polymorphism
+    public abstract partial class DependencyExtension_Polymorphism
     {
         public class Default : DependencyExtension_Polymorphism
         {

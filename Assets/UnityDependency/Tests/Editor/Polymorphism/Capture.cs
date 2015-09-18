@@ -4,7 +4,7 @@
     using NUnit.Framework;
     using UnityEngine;
 
-    public partial class DependencyExtension_Polymorphism
+    public abstract partial class DependencyExtension_Polymorphism
     {
         public class Capture : DependencyExtension_Polymorphism
         {
