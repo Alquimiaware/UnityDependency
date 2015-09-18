@@ -8,7 +8,7 @@
         public class Dependent : DependencyExtension_Polymorphism
         {
             [Test]
-            public void Capture_DependOnBase_IsCaptured()
+            public void Capture_DependOnBase_DerivedIsCaptured()
             {
                 var sut = this.goBuilder.CreateDependAbstract();
                 var candidate = this.goBuilder.CreateDerived();
