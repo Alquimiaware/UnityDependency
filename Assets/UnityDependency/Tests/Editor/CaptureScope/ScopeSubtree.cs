@@ -1,4 +1,4 @@
-﻿namespace UnityDependency.Test.CaptureScope
+﻿namespace UnityDependency.Tests.CaptureScope
 {
     using Alquimiaware;
     using NUnit.Framework;
@@ -8,13 +8,21 @@
     {
         public class ScopeSubtree : DependencyExtension_ParentChain
         {
+            private DependantOnSubtree sut = null;
+
+            [SetUp]
+            public void AncestorSetUp()
+            {
+                this.sut = this.parentChain.Self.AddComponent<DependantOnSubtree>();
+            }
+
             [Test]
             public void Capture_CandidateInSelf_IsCaptured()
             {
                 var candidate = this.parentChain.Self.AddComponent<BoxCollider>();
                 this.sut.CaptureDependencies();
 
-                Assert.AreSame(sut.subtreeCollider, candidate);
+                Assert.AreSame(sut.dependency, candidate);
             }
 
             [Test]
@@ -23,7 +31,7 @@
                 var candidate = this.parentChain.Child.AddComponent<BoxCollider>();
                 this.sut.CaptureDependencies();
 
-                Assert.AreSame(sut.subtreeCollider, candidate);
+                Assert.AreSame(sut.dependency, candidate);
             }
 
             [Test]
@@ -32,7 +40,7 @@
                 var candidate = this.parentChain.Grandchild.AddComponent<BoxCollider>();
                 this.sut.CaptureDependencies();
 
-                Assert.AreSame(sut.subtreeCollider, candidate);
+                Assert.AreSame(sut.dependency, candidate);
             }
 
             [Test]
@@ -41,7 +49,16 @@
                 var candidate = this.parentChain.Parent.AddComponent<BoxCollider>();
                 this.sut.CaptureDependencies();
 
-                Assert.AreNotSame(sut.subtreeCollider, candidate);
+                Assert.AreNotSame(sut.dependency, candidate);
+            }
+
+            [Test]
+            public void Capture_CandidateInGrandparent_IsNotCaptured()
+            {
+                var candidate = this.parentChain.Grandparent.AddComponent<BoxCollider>();
+                this.sut.CaptureDependencies();
+
+                Assert.AreNotSame(this.sut.dependency, candidate);
             }
 
             [Test]
@@ -50,7 +67,13 @@
                 var candidate = this.goBuilder.CreateInRoot<BoxCollider>("Candidate");
                 this.sut.CaptureDependencies();
 
-                Assert.AreNotSame(sut.subtreeCollider, candidate);
+                Assert.AreNotSame(sut.dependency, candidate);
+            }
+
+            public class DependantOnSubtree : MonoBehaviour
+            {
+                [Dependency(Scope.Subtree)]
+                public BoxCollider dependency = null;
             }
         }
     }

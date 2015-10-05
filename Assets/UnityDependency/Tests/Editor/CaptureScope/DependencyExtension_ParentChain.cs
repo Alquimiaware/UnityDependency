@@ -1,16 +1,13 @@
-﻿namespace UnityDependency.Test.CaptureScope
+﻿namespace UnityDependency.Tests.CaptureScope
 {
     using System.Collections.Generic;
     using NUnit.Framework;
-    using UnityDependency.Test.SUT.CaptureScope;
     using UnityEngine;
 
-    [TestFixture]
     public abstract partial class DependencyExtension_ParentChain
     {
         protected Builder goBuilder;
         protected ParentChain parentChain;
-        protected CaptureScopeSample sut;
 
         protected class ParentChain
         {
@@ -78,7 +75,6 @@
         {
             this.goBuilder = new Builder();
             this.parentChain = this.goBuilder.CreateHierarchy();
-            this.sut = this.parentChain.Self.AddComponent<CaptureScopeSample>();
         }
 
         [TearDown]
@@ -87,7 +83,6 @@
             this.goBuilder.TearDown();
             this.goBuilder = null;
             this.parentChain = null;
-            this.sut = null;
         }
     }
 }
