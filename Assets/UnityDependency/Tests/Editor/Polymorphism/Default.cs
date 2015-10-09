@@ -11,6 +11,8 @@
             [Test]
             public void Default_IsAbstract_IsNotCreated()
             {
+                var errorFake = Substitute.For<DependencyExtensions.IErrorEmissor>();
+                DependencyExtensions.ErrorEmissor = errorFake;
                 var sut = this.goBuilder.CreateDependAbstractDefaultAbstract();
                 sut.CaptureDependencies();
 
