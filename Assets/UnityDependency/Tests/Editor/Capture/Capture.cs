@@ -2,7 +2,6 @@
 {
     using Alquimiaware;
     using NUnit.Framework;
-    using UnityDependency.Test.SUT.Capture;
     using UnityEngine;
 
     [TestFixture]
@@ -15,7 +14,7 @@
             var candidate = this.goBuilder.CreateInRoot<BoxCollider>("Candidate");
             sut.CaptureDependencies();
 
-            Assert.AreSame(candidate, sut.Field);
+            Assert.AreSame(candidate, sut.publicField);
         }
 
         [Test]
@@ -25,7 +24,7 @@
             var candidate = this.goBuilder.CreateInRoot<BoxCollider>("Candidate");
             sut.CaptureDependencies();
 
-            Assert.AreSame(candidate, sut.Field);
+            Assert.AreSame(candidate, sut.ProtectedField);
         }
 
         [Test]
@@ -35,30 +34,30 @@
             var candidate = this.goBuilder.CreateInRoot<BoxCollider>("Candidate");
             sut.CaptureDependencies();
 
-            Assert.AreSame(candidate, sut.Field);
+            Assert.AreSame(candidate, sut.PrivateField);
         }
 
         [Test]
-        public void Capture_IsInitialized_IsNotCaptured()
+        public void Capture_DependantIsCaptured_IsNotRecaptured()
         {
             var sut = this.goBuilder.CreateInRoot<PublicDependency>("SUT");
-            sut.field = this.goBuilder.CreateInRoot<BoxCollider>("Captured");
+            sut.publicField = this.goBuilder.CreateInRoot<BoxCollider>("Captured");
             var candidate = sut.gameObject.AddComponent<BoxCollider>();
             sut.CaptureDependencies();
 
-            Assert.AreNotSame(candidate, sut.Field);
+            Assert.AreNotSame(candidate, sut.publicField);
         }
 
         [Test]
-        public void Capture_IsMissing_IsCaptured()
+        public void Capture_DependantIsMissing_IsCaptured()
         {
             var sut = this.goBuilder.CreateInRoot<PublicDependency>("SUT");
-            sut.field = this.goBuilder.CreateInRoot<BoxCollider>("Captured");
-            GameObject.DestroyImmediate(sut.field);
+            sut.publicField = this.goBuilder.CreateInRoot<BoxCollider>("Captured");
+            GameObject.DestroyImmediate(sut.publicField);
             var candidate = sut.gameObject.AddComponent<BoxCollider>();
             sut.CaptureDependencies();
 
-            Assert.AreSame(candidate, sut.Field);
+            Assert.AreSame(candidate, sut.publicField);
         }
     }
 }

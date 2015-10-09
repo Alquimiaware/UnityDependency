@@ -1,6 +1,7 @@
 ﻿namespace UnityDependency.Test.Capture
 {
     using System.Collections.Generic;
+    using Alquimiaware;
     using NUnit.Framework;
     using UnityEngine;
 
@@ -41,6 +42,29 @@
         public void DependencyExtension_Capture_TearDown()
         {
             this.goBuilder.TearDown();
+        }
+
+        public class PrivateDependency : MonoBehaviour
+        {
+            [SerializeField]
+            [Dependency(Scope.Scene)]
+            private BoxCollider privateField;
+            public BoxCollider PrivateField { get { return this.privateField; } }
+        }
+
+        public class ProtectedDependency : MonoBehaviour
+        {
+            [SerializeField]
+            [Dependency(Scope.Scene)]
+            protected BoxCollider protectedField;
+            public BoxCollider ProtectedField { get { return this.protectedField; } }
+        }
+
+        public class PublicDependency : MonoBehaviour
+        {
+            [SerializeField]
+            [Dependency(Scope.Scene)]
+            public BoxCollider publicField;
         }
     }
 }
