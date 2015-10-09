@@ -70,7 +70,7 @@ namespace Alquimiaware
 
                 var defaultType = dependency.DefaultType ?? fi.FieldType;
 
-                // Create default value
+                // Method to use to add a component of a given type
                 var specificAddComp =
                     typeof(GameObject).GetMethod(
                     AddComponentMethodName,
