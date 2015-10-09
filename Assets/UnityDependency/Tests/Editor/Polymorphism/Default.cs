@@ -8,6 +8,21 @@
     {
         public class Default : DependencyExtension_Polymorphism
         {
+            private DependencyExtensions.IErrorEmissor configuredEmissor = null;
+
+            [SetUp]
+            public void DefaultSetUp()
+            {
+                this.configuredEmissor = DependencyExtensions.ErrorEmissor;
+            }
+
+            [TearDown]
+            public void DefaultTearDown()
+            {
+                DependencyExtensions.ErrorEmissor = this.configuredEmissor;
+                this.configuredEmissor = null;
+            }
+
             [Test]
             public void Default_IsAbstract_IsNotCreated()
             {
@@ -38,21 +53,6 @@
                 sut.CaptureDependencies();
 
                 Assert.IsNotNull(sut.Derived);
-            }
-
-            private DependencyExtensions.IErrorEmissor configuredEmissor = null;
-
-            [SetUp]
-            public void DefaultSetUp()
-            {
-                this.configuredEmissor = DependencyExtensions.ErrorEmissor;
-            }
-
-            [TearDown]
-            public void DefaultTearDown()
-            {
-                DependencyExtensions.ErrorEmissor = this.configuredEmissor;
-                this.configuredEmissor = null;
             }
         }
     }
