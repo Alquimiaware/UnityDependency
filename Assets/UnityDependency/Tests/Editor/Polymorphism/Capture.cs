@@ -14,6 +14,7 @@
                 var sut = this.goBuilder.CreateDerived();
                 var candidate = this.goBuilder.CreateInRoot<CapsuleCollider>("Candidate");
                 sut.CaptureDependencies();
+
                 Assert.AreSame(sut.BasePrivateField, candidate);
             }
 
@@ -23,6 +24,7 @@
                 var sut = this.goBuilder.CreateDerived();
                 var candidate = this.goBuilder.CreateInRoot<BoxCollider>("Candidate");
                 sut.CaptureDependencies();
+
                 Assert.AreSame(sut.BaseProtectedField, candidate);
             }
 
@@ -32,6 +34,7 @@
                 var sut = this.goBuilder.CreateDerived();
                 var candidate = this.goBuilder.CreateInRoot<SphereCollider>("Candidate");
                 sut.CaptureDependencies();
+
                 Assert.AreSame(sut.DerivedField, candidate);
             }
         }
