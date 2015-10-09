@@ -1,4 +1,4 @@
-﻿namespace UnityDependency.Test.Polymorphism
+﻿namespace UnityDependency.Tests.Polymorphism
 {
     using Alquimiaware;
     using NSubstitute;
