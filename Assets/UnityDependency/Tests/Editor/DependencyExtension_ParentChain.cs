@@ -1,4 +1,4 @@
-﻿namespace UnityDependency.Tests.CaptureScope
+﻿namespace UnityDependency.Tests
 {
     using System.Collections.Generic;
     using NUnit.Framework;
