@@ -139,7 +139,7 @@ namespace Alquimiaware
                 string segment = segments[i].Trim();
 
                 if (string.IsNullOrEmpty(segment))
-                    continue;
+                    throw new System.ArgumentOutOfRangeException("DefaultPath", string.Format("{0} cannot have a child with empty name.", currentNode.name));
 
                 if (segment == selfJumper)
                     continue;

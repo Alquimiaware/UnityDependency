@@ -17,6 +17,29 @@
             }
 
             [Test]
+            [ExpectedException(typeof(System.ArgumentOutOfRangeException))]
+            public void Capture_PathContainsDoubleSlash_Fails()
+            {
+                var sut = this.parentChain.Self.AddComponent<DefaultPathDoubleSlash>();
+                try
+                {
+                    sut.CaptureDependencies();
+                }
+                finally
+                {
+                    GameObject.DestroyImmediate(GameObject.Find("/New"));
+                }
+            }
+
+            [Test]
+            [ExpectedException(typeof(System.ArgumentOutOfRangeException))]
+            public void Capture_PathEndsWithSlash_Fails()
+            {
+                var sut = this.parentChain.Self.AddComponent<DefaultPathEndingSlash>();
+                sut.CaptureDependencies();
+            }
+
+            [Test]
             public void Capture_PathIsMissingRootObject_IsCreated()
             {
                 var sut = this.parentChain.Self.AddComponent<DefaultPathAbsoluteNew>();
