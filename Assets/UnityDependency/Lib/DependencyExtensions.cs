@@ -84,7 +84,10 @@ namespace Alquimiaware
                 }
                 else
                 {
-                    var segments = dependency.DefaultPath.Trim().Split('/');
+                    var segments = dependency.DefaultPath.Trim().Split(new char[]{ '/' }, System.StringSplitOptions.RemoveEmptyEntries);
+                    if (segments.Length == 0)
+                        throw new System.ArgumentException("Dependency DefaultPath '" + dependency.DefaultPath + "' is not valid.", "DefaultPath");
+
                     Transform currentNode = null;
 
                     if (!IsRelativePath(segments))

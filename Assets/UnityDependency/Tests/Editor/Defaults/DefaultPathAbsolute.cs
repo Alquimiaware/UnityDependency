@@ -9,6 +9,14 @@
         public class DefaultPathAbsolute : DependencyExtension_ParentChain
         {
             [Test]
+            [ExpectedException(typeof(System.ArgumentException))]
+            public void Capture_PathIsSlash_Fails()
+            {
+                var sut = this.parentChain.Self.AddComponent<DefaultPathSlash>();
+                sut.CaptureDependencies();
+            }
+
+            [Test]
             public void Capture_PathIsMissingRootObject_IsCreated()
             {
                 var sut = this.parentChain.Self.AddComponent<DefaultPathAbsoluteNew>();

@@ -85,6 +85,12 @@
             public CapsuleCollider field = null;
         }
 
+        public class DefaultPathSlash : MonoBehaviour
+        {
+            [Dependency(Scope.Scene, DefaultPath = " / ")]
+            public CapsuleCollider field = null;
+        }
+
         public class DefaultPathAbsoluteNew : MonoBehaviour
         {
             [Dependency(Scope.Scene, DefaultPath = "New")]
