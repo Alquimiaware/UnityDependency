@@ -57,6 +57,12 @@ namespace Alquimiaware
                 }
             }
 
+            // Method to use to add a component of a given type
+            var specificAddComp = typeof(GameObject).GetMethod(
+                AddComponentMethodName,
+                new Type[] { typeof(Type) }
+                );
+
             // Generate defaults for not found dependencies
             foreach (var fi in fieldInfos)
             {
@@ -70,15 +76,13 @@ namespace Alquimiaware
 
                 var defaultType = dependency.DefaultType ?? fi.FieldType;
 
-                // Method to use to add a component of a given type
-                var specificAddComp =
-                    typeof(GameObject).GetMethod(
-                    AddComponentMethodName,
-                    new Type[] { typeof(Type) }
-                    );
-
-                // Then use the path
-                if (dependency.DefaultPath != null && dependency.DefaultPath.Trim().Length > 0)
+                if (dependency.DefaultPath == null || dependency.DefaultPath.Trim().Length == 0)
+                {
+                    value = specificAddComp.Invoke(
+                        monoBehaviour.gameObject,
+                        new object[] { defaultType });
+                }
+                else
                 {
                     var segments = dependency.DefaultPath.Trim().Split('/');
                     Transform currentNode = null;
@@ -162,12 +166,6 @@ namespace Alquimiaware
                     value = specificAddComp.Invoke(
                         currentNode.gameObject,
                         new object[] { defaultType });
-                }
-                else
-                {
-                    value = specificAddComp.Invoke(
-                    monoBehaviour.gameObject,
-                    new object[] { defaultType });
                 }
 
                 fi.SetValue(monoBehaviour, value);
