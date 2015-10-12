@@ -78,102 +78,90 @@ namespace Alquimiaware
                     );
 
                 // Then use the path
-                if (dependency.DefaultPath != null)
+                if (dependency.DefaultPath != null && dependency.DefaultPath.Trim().Length > 0)
                 {
                     var segments = dependency.DefaultPath.Trim().Split('/');
                     Transform currentNode = null;
-                    // Differentiate absolute from relative
-                    // ./ is relative
-                    // A direct name is absolute
-                    // / empty first slash is absolute
-                    if (segments.Length == 0)
+
+                    if (!IsRelativePath(segments))
                     {
-                        // TODO: Can this happen with the split?
-                        // it would mean there are no slahes? Whan happens in this case?
-                        // Use self
-                    }
-                    else if (segments.Length > 0)
-                    {
-                        var first = segments[0].Trim();
-                        if (string.IsNullOrEmpty(first) ||
-                           (first != selfJumper && first != parentJumper))
+                        // Is absolute
+                        foreach (var segment in segments)
                         {
-                            // Is absolute
-                            foreach (var segment in segments)
+                            if (string.IsNullOrEmpty(segment)
+                                || segment == selfJumper)
+                                continue;
+
+                            if (segment == parentJumper)
                             {
-                                if (string.IsNullOrEmpty(segment)
-                                    || segment == selfJumper)
-                                    continue;
-
-                                if (segment == parentJumper)
+                                if (currentNode != null && currentNode.parent != null)
                                 {
-                                    if (currentNode != null && currentNode.parent != null)
-                                    {
-                                        currentNode = currentNode.parent;
-                                    }
-                                    else
-                                    {
-                                        string message = currentNode != null ?
-                                            string.Format("{0} has no parent") :
-                                            string.Format("root has no parent");
-
-                                        throw new ArgumentOutOfRangeException("DefaultPath", message);
-                                    }
+                                    currentNode = currentNode.parent;
                                 }
-                                else // Is a normal name
+                                else
                                 {
-                                    if (currentNode == null)
-                                    {
-                                        var go = GameObject.Find("/" + segment);
-                                        if (go != null)
-                                            currentNode = go.transform;
-                                        else
-                                            currentNode = new GameObject(segment).transform;
-                                    }
-                                    else
-                                        currentNode = currentNode.GetOrAddChild(segment);
+                                    string message = currentNode != null ?
+                                        string.Format("{0} has no parent", currentNode.name) :
+                                        string.Format("root has no parent");
+
+                                    throw new ArgumentOutOfRangeException("DefaultPath", message);
                                 }
                             }
-                        }
-                        else
-                        {
-                            // Is Relative
-                            foreach (var segment in segments)
+                            else // Is a normal name
                             {
-                                if (string.IsNullOrEmpty(segment))
-                                    continue;
-                                if (segment == selfJumper)
+                                if (currentNode == null)
                                 {
-                                    currentNode = currentNode ?? monoBehaviour.transform;
-                                    continue;
-                                }
-
-                                if (segment == parentJumper)
-                                {
-                                    if (currentNode != null && currentNode.parent != null)
-                                    {
-                                        currentNode = currentNode.parent;
-                                    }
+                                    var go = GameObject.Find("/" + segment);
+                                    if (go != null)
+                                        currentNode = go.transform;
                                     else
-                                    {
-                                        string message = currentNode != null ?
-                                            string.Format("{0} has no parent") :
-                                            string.Format("root has no parent");
-
-                                        throw new ArgumentOutOfRangeException("DefaultPath", message);
-                                    }
+                                        currentNode = new GameObject(segment).transform;
                                 }
-                                else // Is a normal name
-                                {
+                                else
                                     currentNode = currentNode.GetOrAddChild(segment);
-                                }
                             }
                         }
-
-                        value = specificAddComp.Invoke(
-                            currentNode.gameObject,
-                            new object[] { defaultType });
                     }
+                    else
+                    {
+                        // Is Relative
+                        currentNode = monoBehaviour.transform;
+
+                        foreach (var segment in segments)
+                        {
+                            if (string.IsNullOrEmpty(segment))
+                                continue;
+                            if (segment == selfJumper)
+                            {
+                                currentNode = currentNode ?? monoBehaviour.transform;
+                                continue;
+                            }
+
+                            if (segment == parentJumper)
+                            {
+                                if (currentNode != null && currentNode.parent != null)
+                                {
+                                    currentNode = currentNode.parent;
+                                }
+                                else
+                                {
+                                    string message = currentNode != null ?
+                                        string.Format("{0} has no parent", currentNode.name) :
+                                        string.Format("root has no parent");
+
+                                    throw new ArgumentOutOfRangeException("DefaultPath", message);
+                                }
+                            }
+                            else // Is a normal name
+                            {
+                                currentNode = currentNode.GetOrAddChild(segment);
+                            }
+                        }
+                    }
+
+                    value = specificAddComp.Invoke(
+                        currentNode.gameObject,
+                        new object[] { defaultType });
                 }
                 else
                 {
@@ -184,6 +172,15 @@ namespace Alquimiaware
 
                 fi.SetValue(monoBehaviour, value);
             }
+        }
+
+        private static bool IsRelativePath(string[] segments)
+        {
+            string first = segments[0].Trim();
+
+            return first == selfJumper
+                || first == parentJumper
+                || (segments.Length == 1 && string.IsNullOrEmpty(first));
         }
 
         /// <summary>
