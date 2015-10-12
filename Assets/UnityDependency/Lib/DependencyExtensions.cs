@@ -78,7 +78,7 @@ namespace Alquimiaware
 
                 Transform targetNode = null;
 
-                if (dependency.DefaultPath == null || dependency.DefaultPath.Trim().Length == 0)
+                if (dependency.DefaultPath == null || string.IsNullOrEmpty(dependency.DefaultPath.Trim()))
                 {
                     targetNode = monoBehaviour.transform;
                 }
