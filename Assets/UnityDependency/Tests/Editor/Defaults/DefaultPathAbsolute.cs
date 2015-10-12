@@ -9,7 +9,7 @@
         public class DefaultPathAbsolute : DependencyExtension_ParentChain
         {
             [Test]
-            [ExpectedException(typeof(System.ArgumentException))]
+            [ExpectedException(typeof(System.ArgumentOutOfRangeException))]
             public void Capture_PathIsSlash_Fails()
             {
                 var sut = this.parentChain.Self.AddComponent<DefaultPathSlash>();
