@@ -7,7 +7,7 @@
     [TestFixture]
     public abstract partial class DependencyExtension_ParentChain
     {
-        public class DefaultTypeNotDeclared : MonoBehaviour
+        public class DefaultNotDeclared : MonoBehaviour
         {
             [Dependency(Scope.Scene)]
             public CapsuleCollider field = null;

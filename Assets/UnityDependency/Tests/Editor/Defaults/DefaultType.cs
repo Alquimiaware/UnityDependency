@@ -11,7 +11,7 @@
             [Test]
             public void Capture_HasNoDefaultType_IsCaptured()
             {
-                var sut = this.goBuilder.CreateInRoot<DefaultTypeNotDeclared>();
+                var sut = this.goBuilder.CreateInRoot<DefaultNotDeclared>();
                 sut.CaptureDependencies();
 
                 Assert.IsNotNull(sut.field);
@@ -20,7 +20,7 @@
             [Test]
             public void Capture_HasNoDefaultType_CreatesComponentOfFieldType()
             {
-                var sut = this.goBuilder.CreateInRoot<DefaultTypeNotDeclared>();
+                var sut = this.goBuilder.CreateInRoot<DefaultNotDeclared>();
                 sut.CaptureDependencies();
 
                 // Is.TypeOf checks exact type, whereas Assert.IsInstanceOf<> checks type compatibility
