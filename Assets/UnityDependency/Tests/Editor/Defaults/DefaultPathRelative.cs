@@ -133,19 +133,21 @@
             }
 
             [Test]
-            [ExpectedException(ExpectedException = typeof(System.ArgumentOutOfRangeException))]
             public void Capture_PathIsParentAndSelfIsRoot_Fails()
             {
                 var sut = this.goBuilder.CreateInRoot<DefaultPathRelativeParent>("Root");
-                sut.CaptureDependencies();
+                var ex = Assert.Catch<System.ArgumentOutOfRangeException>(() => sut.CaptureDependencies());
+
+                StringAssert.Contains("has no parent", ex.Message);
             }
 
             [Test]
-            [ExpectedException(ExpectedException = typeof(System.ArgumentOutOfRangeException))]
             public void Capture_PathIsGrandparentAndParentIsRoot_Fails()
             {
                 var sut = this.parentChain.Parent.AddComponent<DefaultPathRelativeGrandparent>();
-                sut.CaptureDependencies();
+                var ex = Assert.Catch<System.ArgumentOutOfRangeException>(() => sut.CaptureDependencies());
+
+                StringAssert.Contains("has no parent", ex.Message);
             }
 
             [Test]

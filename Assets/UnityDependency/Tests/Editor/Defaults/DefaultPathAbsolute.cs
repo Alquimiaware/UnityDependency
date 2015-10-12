@@ -9,21 +9,23 @@
         public class DefaultPathAbsolute : DependencyExtension_ParentChain
         {
             [Test]
-            [ExpectedException(typeof(System.ArgumentOutOfRangeException))]
             public void Capture_PathIsSlash_Fails()
             {
                 var sut = this.parentChain.Self.AddComponent<DefaultPathSlash>();
-                sut.CaptureDependencies();
+                var ex = Assert.Catch<System.ArgumentOutOfRangeException>(() => sut.CaptureDependencies());
+
+                StringAssert.Contains("not a valid path", ex.Message);
             }
 
             [Test]
-            [ExpectedException(typeof(System.ArgumentOutOfRangeException))]
             public void Capture_PathContainsDoubleSlash_Fails()
             {
                 var sut = this.parentChain.Self.AddComponent<DefaultPathDoubleSlash>();
                 try
                 {
-                    sut.CaptureDependencies();
+                    var ex = Assert.Catch<System.ArgumentOutOfRangeException>(() => sut.CaptureDependencies());
+
+                    StringAssert.Contains("child with empty name", ex.Message);
                 }
                 finally
                 {
@@ -32,11 +34,12 @@
             }
 
             [Test]
-            [ExpectedException(typeof(System.ArgumentOutOfRangeException))]
             public void Capture_PathEndsWithSlash_Fails()
             {
                 var sut = this.parentChain.Self.AddComponent<DefaultPathEndingSlash>();
-                sut.CaptureDependencies();
+                var ex = Assert.Catch<System.ArgumentOutOfRangeException>(() => sut.CaptureDependencies());
+
+                StringAssert.Contains("child with empty name", ex.Message);
             }
 
             [Test]
@@ -110,11 +113,12 @@
             }
 
             [Test]
-            [ExpectedException(ExpectedException = typeof(System.ArgumentOutOfRangeException))]
             public void Capture_PathIsRootParent_Fails()
             {
                 var sut = this.parentChain.Self.AddComponent<DefaultPathAbsoluteGrandgrandparent>();
-                sut.CaptureDependencies();
+                var ex = Assert.Catch<System.ArgumentOutOfRangeException>(() => sut.CaptureDependencies());
+
+                StringAssert.Contains("has no parent", ex.Message);
             }
         }
     }

@@ -88,7 +88,7 @@ namespace Alquimiaware
                     if (segments.Length == 2
                         && string.IsNullOrEmpty(segments[0])
                         && string.IsNullOrEmpty(segments[1]))
-                        throw new System.ArgumentOutOfRangeException("DefaultPath", "Dependency DefaultPath '" + dependency.DefaultPath + "' is not valid.");
+                        throw new System.ArgumentOutOfRangeException("DefaultPath", "'" + dependency.DefaultPath + "' is not a valid path.");
 
                     if (IsRelativePath(segments))
                     {
