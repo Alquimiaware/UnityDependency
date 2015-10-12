@@ -103,6 +103,12 @@
             public CapsuleCollider field = null;
         }
 
+        public class DefaultPathStartingSlash : MonoBehaviour
+        {
+            [Dependency(Scope.Scene, DefaultPath = "/Grandparent")]
+            public CapsuleCollider field = null;
+        }
+
         public class DefaultPathAbsoluteNew : MonoBehaviour
         {
             [Dependency(Scope.Scene, DefaultPath = "New")]

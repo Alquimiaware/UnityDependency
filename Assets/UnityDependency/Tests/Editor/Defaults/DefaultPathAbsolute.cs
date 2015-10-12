@@ -40,6 +40,15 @@
             }
 
             [Test]
+            public void Capture_PathIsSlashPlusExistingRootObject_IsAdded()
+            {
+                var sut = this.parentChain.Self.AddComponent<DefaultPathStartingSlash>();
+                sut.CaptureDependencies();
+
+                Assert.AreSame(this.parentChain.Grandparent, sut.field.gameObject);
+            }
+
+            [Test]
             public void Capture_PathIsMissingRootObject_IsCreated()
             {
                 var sut = this.parentChain.Self.AddComponent<DefaultPathAbsoluteNew>();
