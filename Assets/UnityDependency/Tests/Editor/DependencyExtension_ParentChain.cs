@@ -45,6 +45,18 @@
                 };
             }
 
+            public GameObject CreateChild(Transform parent, string name = null)
+            {
+                GameObject newObj = string.IsNullOrEmpty(name)
+                    ? new GameObject()
+                    : new GameObject(name);
+
+                this.createdObjects.Add(newObj);
+                newObj.transform.parent = parent;
+
+                return newObj;
+            }
+
             public GameObject CreateInRoot(string name = null)
             {
                 GameObject newObj = string.IsNullOrEmpty(name)
