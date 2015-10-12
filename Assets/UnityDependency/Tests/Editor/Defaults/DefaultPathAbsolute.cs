@@ -52,6 +52,22 @@
             }
 
             [Test]
+            public void Capture_PathIsMissingRootObject_IsCaptured()
+            {
+                var sut = this.parentChain.Self.AddComponent<DefaultPathAbsoluteNew>();
+                try
+                {
+                    sut.CaptureDependencies();
+
+                    Assert.IsNotNull(sut.field);
+                }
+                finally
+                {
+                    GameObject.DestroyImmediate(sut.field.gameObject);
+                }
+            }
+
+            [Test]
             public void Capture_PathIsMissingRootObject_IsCreated()
             {
                 var sut = this.parentChain.Self.AddComponent<DefaultPathAbsoluteNew>();
@@ -84,6 +100,22 @@
                 sut.CaptureDependencies();
 
                 Assert.AreSame(this.parentChain.Grandparent, sut.field.gameObject);
+            }
+
+            [Test]
+            public void Capture_PathIsMissingRootChild_IsCaptured()
+            {
+                var sut = this.parentChain.Self.AddComponent<DefaultPathAbsoluteUncle>();
+                try
+                {
+                    sut.CaptureDependencies();
+
+                    Assert.IsNotNull(sut.field);
+                }
+                finally
+                {
+                    GameObject.DestroyImmediate(sut.field.gameObject);
+                }
             }
 
             [Test]

@@ -64,6 +64,15 @@
             }
 
             [Test]
+            public void Capture_PathIsMissingChild_IsCaptured()
+            {
+                var sut = this.parentChain.Self.AddComponent<DefaultPathRelativeSecondChild>();
+                sut.CaptureDependencies();
+
+                Assert.IsNotNull(sut.field);
+            }
+
+            [Test]
             public void Capture_PathIsMissingChild_IsCreated()
             {
                 var sut = this.parentChain.Self.AddComponent<DefaultPathRelativeSecondChild>();
@@ -91,6 +100,15 @@
                 sut.CaptureDependencies();
 
                 Assert.AreSame(this.parentChain.Grandchild, sut.field.gameObject);
+            }
+
+            [Test]
+            public void Capture_PathIsMissingGrandchild_IsCaptured()
+            {
+                var sut = this.parentChain.Self.AddComponent<DefaultPathRelativeSecondGrandchild>();
+                sut.CaptureDependencies();
+
+                Assert.IsNotNull(sut.field);
             }
 
             [Test]
@@ -151,6 +169,22 @@
             }
 
             [Test]
+            public void Capture_PathIsMissingSibling_IsCaptured()
+            {
+                var sut = this.parentChain.Self.AddComponent<DefaultPathRelativeSibling>();
+                try
+                {
+                    sut.CaptureDependencies();
+
+                    Assert.IsNotNull(sut.field);
+                }
+                finally
+                {
+                    GameObject.DestroyImmediate(sut.field.gameObject);
+                }
+            }
+
+            [Test]
             public void Capture_PathIsMissingSibling_IsCreated()
             {
                 var sut = this.parentChain.Self.AddComponent<DefaultPathRelativeSibling>();
@@ -159,7 +193,6 @@
                     sut.CaptureDependencies();
                     var created = GameObject.Find("Sibling");
 
-                    Assert.IsNotNull(sut.field);
                     Assert.AreSame(created, sut.field.gameObject);
                 }
                 finally
