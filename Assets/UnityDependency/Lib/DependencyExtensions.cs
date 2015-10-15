@@ -1,12 +1,33 @@
 namespace Alquimiaware
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using UnityEngine;
 
     public static class DependencyExtensions
     {
+        static DependencyExtensions()
+        {
+            ErrorEmissor = new UnityErrorEmissor();
+        }
+
+        private static void NotifyError(string message)
+        {
+            if (ErrorEmissor != null)
+                ErrorEmissor.NotifyError(message);
+        }
+
+        private static void NotifyErrorFormat(string message, params object[] args)
+        {
+            if (ErrorEmissor != null)
+            {
+                string formattedMessage = string.Format(message, args);
+                ErrorEmissor.NotifyError(formattedMessage);
+            }
+        }
+
         private const string FindDependencyExtensionName = "FindClosestComponent";
         private const string AddComponentMethodName = "AddComponent";
         private const string selfJumper = ".";
@@ -75,6 +96,15 @@ namespace Alquimiaware
                     continue;
 
                 var defaultType = dependency.DefaultType ?? fi.FieldType;
+
+                if (defaultType.IsAbstract)
+                {
+                    NotifyErrorFormat("Field '{1}' in class '{0}' must have a non-abstract DefaultType. Current DefaultType is '{2}'.",
+                                      fi.DeclaringType.Name,
+                                      fi.Name,
+                                      defaultType.Name);
+                    continue;
+                }
 
                 Transform targetNode = null;
 
@@ -373,10 +403,18 @@ namespace Alquimiaware
 
         private static FieldInfo[] GetFields(MonoBehaviour monoBehaviour)
         {
-            var type = monoBehaviour.GetType();
+            return GetFields(monoBehaviour.GetType()).ToArray();
+        }
 
+        private static IEnumerable<FieldInfo> GetFields(Type type)
+        {
             var fieldInfos = type.GetFields(
-                BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+                BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+
+            Type baseType = type.BaseType;
+            if (baseType != null)
+                return fieldInfos.Concat(GetFields(baseType));
+
             return fieldInfos;
         }
 
@@ -388,6 +426,21 @@ namespace Alquimiaware
                 fa[0] as DependencyAttribute :
                 default(DependencyAttribute);
             return dependency;
+        }
+
+        public interface IErrorEmissor
+        {
+            void NotifyError(string message);
+        }
+
+        public static IErrorEmissor ErrorEmissor { get; set; }
+
+        public class UnityErrorEmissor : IErrorEmissor
+        {
+            public void NotifyError(string message)
+            {
+                UnityEngine.Debug.LogError(message);
+            }
         }
     }
 }
