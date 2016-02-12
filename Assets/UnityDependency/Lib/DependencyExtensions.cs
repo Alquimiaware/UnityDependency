@@ -147,7 +147,13 @@ namespace Alquimiaware
                     targetNode.gameObject,
                     new object[] { defaultType });
 
-                fi.SetValue(monoBehaviour, value);
+                if (value != null)
+                    fi.SetValue(monoBehaviour, value);
+                else
+                    NotifyErrorFormat("Field '{1}' in class '{0}' must have an instantiable DefaultType. Current DefaultType is '{2}'.",
+                                      fi.DeclaringType.Name,
+                                      fi.Name,
+                                      defaultType.Name);
             }
         }
 
