@@ -1,4 +1,4 @@
-﻿namespace UnityDependency.Tests.CaptureScope
+﻿namespace UnityDependency.Tests
 {
     using System.Collections.Generic;
     using NUnit.Framework;
@@ -43,6 +43,18 @@
                     Child = created[3],
                     Grandchild = created[4]
                 };
+            }
+
+            public GameObject CreateChild(Transform parent, string name = null)
+            {
+                GameObject newObj = string.IsNullOrEmpty(name)
+                    ? new GameObject()
+                    : new GameObject(name);
+
+                this.createdObjects.Add(newObj);
+                newObj.transform.parent = parent;
+
+                return newObj;
             }
 
             public GameObject CreateInRoot(string name = null)

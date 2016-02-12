@@ -46,6 +46,13 @@
                 return dependent;
             }
 
+            public DependUninstantiableDefaultUninstantiable CreateDependUninstantiableDefaultUninstantiable() {
+                GameObject created = new GameObject("Dependent");
+                var dependent = created.AddComponent<DependUninstantiableDefaultUninstantiable>();
+                this.createdObjects.Add(created);
+                return dependent;
+            }
+
             public HierarchyDerived CreateDerived()
             {
                 GameObject created = new GameObject("Derived");
@@ -122,6 +129,13 @@
                 [Dependency(Scope.Scene)]
                 private HierarchyDerived derived = null;
                 public HierarchyDerived Derived { get { return this.derived; } }
+            }
+
+            public class DependUninstantiableDefaultUninstantiable : MonoBehaviour {
+                [SerializeField]
+                [Dependency(Scope.Scene, DefaultType = typeof(Collider))]
+                private Collider field = null;
+                public Collider Field { get { return this.field; } }
             }
         }
 
